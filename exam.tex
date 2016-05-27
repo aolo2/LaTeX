@@ -219,7 +219,7 @@ Q_n(x) &= a_0 x^n + a_1 x^{n-1} + \ldots + a_{n-1}x + a_n.
 \int_a^b (\alpha_1 f_1 + \alpha_2 f_2) (x) ~dx = \alpha_1 \int_a^b f_1(x) ~dx + \alpha_2 \int_a^b f_2(x)~dx. \label{eq:3:1}
 \end{equation}
 \end{theorem}
-\begin{proof} Пусть $a < b$. Для некоторого разибиения $P = (x_0, \ldots, x_n)$ с отмеченными точками $\xi = (\xi_1, \ldots, \xi_n)$ отрезка $[a,b]$ имеем равенство
+\begin{proof} Пусть $a < b$. Для некоторого разбиения $P = (x_0, \ldots, x_n)$ с отмеченными точками $\xi = (\xi_1, \ldots, \xi_n)$ отрезка $[a,b]$ имеем равенство
 \begin{equation}
 \sum_{i=1}^n(\alpha_1f_1(\xi_i) + \alpha_2 f_2 (\xi_i))\Delta x_i = \alpha_1 \sum_{i=1}^n f_1 (\xi_i) \Delta x_i + \alpha_2 \sum_{i=1}^n f_2 (\xi_i) \Delta x_i.\label{eq:3:2}
 \end{equation}
@@ -236,7 +236,7 @@ Q_n(x) &= a_0 x^n + a_1 x^{n-1} + \ldots + a_{n-1}x + a_n.
 Интегральная сумма для константы не зависит от выбора разбиения $P$ и отмеченных точек $\xi$ и равна
 \[ \sigma(f;P;\xi) = \sum_{i=1}^n c\Delta x_i = c(b-a).\]
 
-Из теореме о пределе постоянной функции получаем указанную формулу.
+Из теоремы о пределе постоянной функции получаем указанную формулу.
 \end{proof}
 \section{Вопрос №4} %%%%%%%%%%%%%%%%% ВОПРОС 4
 \begin{framed}
@@ -276,15 +276,15 @@ Q_n(x) &= a_0 x^n + a_1 x^{n-1} + \ldots + a_{n-1}x + a_n.
 Докажем сначала два вспомогательных утверждения. Пусть разбиение $\tilde{P}$ отрезка $[a,b]$ получено из разбиения $P$ только добавлением некоторых новых точек. Будем называть разбиение $\tilde{P}$ \textbf{продолжением} разбиения $P$.\\
 
 \begin{lemma}
-Пусть $\tilde{P}$ --- продолжение разбиения $P$. $\xi, \tilde{\xi}$ --- отмеченные точки разбиений $P, \tilde{P}$ соответствпнно. Тогда
+Пусть $\tilde{P}$ --- продолжение разбиения $P$. $\xi, \tilde{\xi}$ --- отмеченные точки разбиений $P, \tilde{P}$ соответственно. Тогда
 \begin{equation}
 \left|\sigma(f; \tilde{P}, \tilde{\xi}) - \sigma(f; P, \xi)\right| \leqslant \sum_{i=1}^n \omega (f; \Delta_i) \Delta x_i. \label{eq:5:1}
 \end{equation}
 \end{lemma}
 \begin{proof}
-Введем следующие обозначния. При построении продолжения $\tilde{P}$ некоторые (может и не все) частичные отрезки $\Delta_i = [x_{i-1}, x_i]$ разбиения $P$ сами подвергаются разбиению $x_{i-1} = x_{i0} < x_{i1} < \ldots < x_{ik_i} = x_i$. Поэтому будем нумеровать точки разбиения $\tilde{P}$  двумя индексами. В записи $x_{ij}$ первый индекс означает, что $x_{ij}  \in \Delta_i$, а второй индекс ест порядковый номер точки на отрезке $\Delta_i$. Положим также $\Delta x_{ij} = x_{ij} - x_{ij - 1}$ и $\Delta_{ij} = [x_{ij - 1}, x_{ij}]$.\\
+Введем следующие обозначения. При построении продолжения $\tilde{P}$ некоторые (может и не все) частичные отрезки $\Delta_i = [x_{i-1}, x_i]$ разбиения $P$ сами подвергаются разбиению $x_{i-1} = x_{i0} < x_{i1} < \ldots < x_{ik_i} = x_i$. Поэтому будем нумеровать точки разбиения $\tilde{P}$  двумя индексами. В записи $x_{ij}$ первый индекс означает, что $x_{ij}  \in \Delta_i$, а второй индекс есть порядковый номер точки на отрезке $\Delta_i$. Положим также $\Delta x_{ij} = x_{ij} - x_{ij - 1}$ и $\Delta_{ij} = [x_{ij - 1}, x_{ij}]$.\\
 
-Пусть $\xi = (\xi_1, \ldots, \xi_n)$ и $\tilde{\xi} = (\xi_{11}, \ldots, \xi_{nk_n})$  --- отмеченные точки разбиений $P$ и $\tilde{P}$ соответственно. Нумерация точек $\tilde{\xi}$ выбрана так, что $\xi_{ij} \in \Delta_{ij}$. Используя опредения, неравенство треугольника и равенства $\Delta x_i = \Delta x_{i1} + \ldots + \Delta x_{ik_i}$ при $i = 1, \ldots, n$, получаем
+Пусть $\xi = (\xi_1, \ldots, \xi_n)$ и $\tilde{\xi} = (\xi_{11}, \ldots, \xi_{nk_n})$  --- отмеченные точки разбиений $P$ и $\tilde{P}$ соответственно. Нумерация точек $\tilde{\xi}$ выбрана так, что $\xi_{ij} \in \Delta_{ij}$. Используя определения, неравенство треугольника и равенства $\Delta x_i = \Delta x_{i1} + \ldots + \Delta x_{ik_i}$ при $i = 1, \ldots, n$, получаем
 \[ | \sigma(f; \tilde{P}, \tilde{\xi}) - \sigma(f; P; \xi) | = \left| \sum_{i=1}^n \sum_{j=1}^{k_i} f(\xi_{ij}) \Delta x_{ij} - \sum_{i=1}^n f(\xi_i) \Delta x_{i}  \right| =\]
 \[= \left| \sum_{i=1}^n \sum_{j=1}^{k_i}f(\xi_{ij}) \Delta x_{ij} - \sum_{i=1}^n \sum_{j=1}^{k_i} f(\xi_i) \Delta x_{ij} \right| = \left| \sum_{i=1}^n \sum_{j=1}^{k_i} (f(\xi_{ij}) - f(\xi_i)) \Delta x_{ij} \right| \leqslant \]
 \[ \leqslant \sum_{i=1}^n \sum_{j=1}^{k_i} \left| f(\xi_{ij}) - f(\xi_i) \right| \Delta x_{ij} \leqslant \sum_{i=1}^n \sum_{j=1}^{k_i} \omega(f; \Delta_i) \Delta x_{ij} = \sum_{i=1}^n \omega (f; \Delta_i) \Delta x_i. \]
