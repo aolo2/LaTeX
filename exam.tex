@@ -1,10 +1,10 @@
-\documentclass[12pt]{article}
+\documentclass[12pt]{report}
 \RequirePackage[l2tabu, orthodox]{nag}
 \usepackage[utf8]{inputenc}
 \usepackage[russian]{babel}
 \usepackage[top=2cm, bottom=1.5cm, left=2.5cm, right=2.5cm]{geometry}
-\usepackage{amssymb,amsthm,framed,mathtools,microtype,titlesec,titletoc,hyperref,tikz}
-\usepackage{graphicx}
+\usepackage{amssymb,amsthm,framed,mathtools,microtype,titlesec,titletoc,hyperref,tikz,graphicx}
+\usepackage[toc]{multitoc}
 \numberwithin{equation}{section}
 \newtheorem{theorem}{Теорема}[section]
 \newtheorem{lemma}{Лемма}[section]
@@ -26,6 +26,14 @@
   {\Large}           % before-code
 
 
+\makeatletter
+\renewcommand{\thesection}{%
+  \ifnum\c@chapter<1 \@arabic\c@section
+  \else \thechapter.\@arabic\c@section
+  \fi
+}
+\makeatother
+
 \title{Экзамен по математическому анализу.\\Второй семестр}
 \date{}
 
@@ -33,6 +41,7 @@
 
 \maketitle
 \tableofcontents
+
 \thispagestyle{empty}
 
 
@@ -758,7 +767,7 @@ x(a_{j_i}) = a_i,~~~x(\beta_{j_i}) = b_i,~~~x(\alpha_{k_i}) = b_i,~~~x(\beta_{k_
 \textbf{Метод дифференциалов:}
 \begin{enumerate}
 \item[1)] решаемую задачу переформулируют в задачу поиска значения $F(b)$ функции $F(x)$, определенной на отрезке $[a,b]$, причем $F(a) = 0$;
-\item[2)] используя оценки для $\Delta F(x)$, лемму или другие подобные сооражния, получают формулу $dF(x) = f(x)dx$;
+\item[2)] используя оценки для $\Delta F(x)$, лемму или другие подобные соображения, получают формулу $dF(x) = f(x)dx$;
 \item[3)] из формулы \hyperref[th:11:1]{Ньютона --- Лейбница} выводят равенство $F(b) = \int_a^b f(x)~dx$.\\
 \end{enumerate}
 
@@ -772,5 +781,53 @@ x(a_{j_i}) = a_i,~~~x(\beta_{j_i}) = b_i,~~~x(\alpha_{k_i}) = b_i,~~~x(\beta_{k_
 \end{proof}
 
 \newpage \section{Вопрос №17} %%%%%%%%%%%%%%%%%%%%%%%%% Вопрос 17
+\begin{framed}
+Привести формулу для вычисления с помощью определенного интеграла объема тела по площадям параллельных сечений в декартовой системе координат.
+\end{framed}
 
+\begin{theorem} \label{th:17:1}
+Пусть тело заключено между плоскостями $x = a$ и $x = b$, а все сечения этого тела плоскосятми, перпендикулярными координатной оси $Ox$, известны, причем зависимость $S(x)$ площади сечения от абсциссы $x \in [a,b]$ является заданной функцией, непрерывной на отрезке $[a,b]$. Тогда объем этого тело равен
+\[ V = \int_a^b S(x)~dx.\]
+\end{theorem}
+
+\newpage \section{Вопрос №18} %%%%%%%%%%%%%%%%%%%%%%%%% Вопрос 18
+\begin{framed}
+Вывести формулу для вычисления с помощью определенного интеграла объемов тел вращения вокруг осей OX и OY в декартовой системе координат.
+\end{framed}
+
+\begin{theorem} \label{th:18:1}
+Пусть фигура $\Phi$ --- криволинейная трапеция непрерывной и неотрицательной функции $f(x)$ на отрезке $[a,b]$. Тогда:
+\begin{enumerate}
+\item[a)] объем тела, образованного вращением фигуры $\Phi$ вокруг оси $Ox$ равен
+\[ V_{Ox} = \pi \int_a^b f^2(x)~dx.\]
+\item[б)] При $a \geqslant 0$ и вращении фигуры $\Phi$ вокруг оси $Oy$ получаем тело с объемом
+\[ V_{Oy} = 2 \pi \int_a^b x f(x)~dx.\]
+\end{enumerate}
+\end{theorem}
+\begin{proof}[Доказательство методом дифференциалов:]
+~\\
+\begin{enumerate}
+\item[a)] Объем тела, образованного вращением воркуг оси $Ox$ криволинейной трапеции, ограниченной графиком функции $f$ на отрезке $[a,x]$, обозначим через $V(x)$. Тогда $V(a) = 0$, а $V(b)$ --- искомый объем. Приращение $\Delta V$ этой функции в точке $x$ есть объем части рассматриваемого тела между плоскостями с абциссами $x$ и $x + \Delta x$. Эта часть содержится и содержит круговые цилиндры ширины $\Delta x$ радиуса $f_M = \max\limits_{t \in [x, x + \Delta x]} f(t)$ и $f_m = \min\limits_{t \in [x, x + \Delta x]}f(t)$ соответственно, поэтому
+\[ \pi f^2_m \Delta x \leqslant \Delta V \leqslant \pi f^2_M \Delta x.\]
+
+Применяя лемму, когда $F = V$, $h = 1$, $g = \pi f^2$, получаем $dV = \pi f^2(x)~dx$ и указанную формулу для $V_{Ox}$.
+
+\item[б)] Обозначим теперь через $V(x)$ обхем тела, образованого вращением вокруг оси $Oy$ той же криволинейной трапеии на отрезке  $[a,x]$. Две круговые цилиндрические поверхности радиуса $x$ и $x + \Delta x$ вырезают из рассматриваемого тела часть обхемом $\Delta V$. Эта часть содержится и содрежит цилиндрическую оболочку радиуса $x$, толщиной $\Delta x$ высотой  $f_M = \max\limits_{t \in [x, x + \Delta x]} f(t)$ и $f_m = \min\limits_{t \in [x, x + \Delta x]}f(t)$ соответственно. Объем цилиндрической оболочки радиуса $x$, толщиной $\Delta x$ и высотой $h$ равен $\pi (x + \Delta x)^2 h - \pi x^2 h = \pi h(2x \Delta x + \Delta x^2)$. Поэтому
+\[ \pi f_m \leqslant \frac{\Delta V(x)}{2x \Delta x + \Delta x^2} \leqslant \pi f_M,\]
+
+по лемме $dV = 2\pi x f(x)~dx$, и из формулы  \hyperref[th:11:1]{Ньютона --- Лейбница} следует утверждение б) теоремы.
+\end{enumerate}
+\end{proof}
+
+\newpage \section{Вопрос №19} %%%%%%%%%%%%%%%%%%%%%%%%%% Вопрос 19
+\begin{framed}
+Дать определения длины дуги кривой и спрямляемых кривых. Доказать достаточное условие спрямляемости кривых.
+\end{framed}
+
+\textbf{Длиной} $L(\gamma)$ называется точная верхняя грань длин ломаных, вписанных в кривую $\gamma$. Кривая называется \textbf{спрямляемой}, если ее длина существует и конечна.
+
+\begin{theorem}[Достаточное условие спрямляемости кривой] \label{th:19:1}
+Гладкая кривая спрямляема. Длина $L(\gamma)$ гладкой кривой $\gamma$ с параметризацией $\vec{r} = (x_1(t),\ldots,x_m(t)),~t\in[a,b],\\a < b$, вычисляется по формуле
+\[ L(\gamma) = \int\limits_a^b |\vec{r'}(t)|~dt = \int\limits_a^b \sqrt{\sum_{i=1}^m (x_i'(t))^2}~dt.\]
+\end{theorem}
 \end{document}  
