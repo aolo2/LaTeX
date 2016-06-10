@@ -26,6 +26,8 @@
   {\Large}           % before-code
 
 
+\newcommand{\pvec}[1]{\vec{#1}\mkern2mu\vphantom{#1}}
+
 \makeatletter
 \renewcommand{\thesection}{%
   \ifnum\c@chapter<1 \@arabic\c@section
@@ -828,6 +830,54 @@ x(a_{j_i}) = a_i,~~~x(\beta_{j_i}) = b_i,~~~x(\alpha_{k_i}) = b_i,~~~x(\beta_{k_
 
 \begin{theorem}[Достаточное условие спрямляемости кривой] \label{th:19:1}
 Гладкая кривая спрямляема. Длина $L(\gamma)$ гладкой кривой $\gamma$ с параметризацией $\vec{r} = (x_1(t),\ldots,x_m(t)),~t\in[a,b],\\a < b$, вычисляется по формуле
-\[ L(\gamma) = \int\limits_a^b |\vec{r'}(t)|~dt = \int\limits_a^b \sqrt{\sum_{i=1}^m (x_i'(t))^2}~dt.\]
+\[ L(\gamma) = \int_a^b |\pvec{r}'(t)|~dt = \int_a^b \sqrt{\sum_{i=1}^m (x_i'(t))^2}~dt.\]
 \end{theorem}
+
+Докажем сначала обобщение на векторный случай теоремы об оценке модуля интеграла. При этом определенный интеграл от векторной функции будем понимать как вектор, состоящий из определенных интегралов от ее координатных функций.
+
+\begin{lemma}[оценка модуля интеграла векторной функции] \label{lemm:19:1}
+Для непрерывной на отрезке $[a,b]$, $a < b$, векторной функции $\vec{r}(t)$ справедливо неравенство
+\[ \left| \int_a^b \vec{r}(t)~dt \right| \leqslant \int_a^b |\vec{r}(t)|~dt.\]
+\end{lemma}
+\begin{proof}[Доказательство леммы] Пусть $x_1(t),\ldots,x_m(t)$ --- координатные функции вектор-функции $\vec{r}(t)$. По условию векторная функция $\vec{r}(t)$ непрерывна на отрезке $[a,b]$, а значит, непрерывны функции $x_1(t), \ldots, x_m(t)$ и $|\vec{r}(t)|$. Поэтому определены и конечны все интегралы леммы, а значит, соответствующие интегральные суммы не зависят от выбора разбиений, и для доказательства неравенства леммы мы можем учитывать только равномерные разбиения отрезка. Разделим отрезок $[a,b]$ на $n$ равных частей и положим $t_j = a + \frac{b-a}{n}j$, $j = 0,1,\ldots,n$. Преобразуя суммы и используя неравество Коши --- Буняковского, получаем
+\[
+\begin{aligned}
+\sum_{i=1}^m \left( \sum_{j=1}^n x_i(t_j) \right)^2&= \sum_{i=1}^m\left( \sum_{j_1 = 1}^n x_i (t_{j_1}) \right) \left( \sum_{j_2 = 1}^n x_i (t_{j_2}) \right) =\\
+&= \sum_{j_1 = 1}^n \sum_{j_2 = 1}^n \left( \sum_{i=1}^m x_i (t_{j_1}) x_i (t_{j_2}) \right) \leqslant\\
+&\leqslant \sum_{j_1 = 1}^n \sum_{j_2 = 1}^n \sqrt{\sum_{i=1}^m x_i^2 (t_{j_1})} \sqrt{\sum_{i=1}^m x_i^2 (t_{j_2})} = \left( \sum_{j=1}^n \sqrt{\sum_{i=1}^m x_i^2 (t_j)}\right).
+\end{aligned}\]
+
+Таким обрзаом, интегральгные суммы для функция $x_1(t), \ldots, x_m(t)$ и $|\vec{r}(t)|$, соответствующие разбиению $P = (t_0, \ldots, t_n)$ с отмеченными точками $\xi_1 = t_1, \ldots, \xi_n = t_n$ отрезка $[a,b]$, связаны неравенством
+\[\sum_{i=1}^m \sigma(x_i; P, \xi)^2 = \sum_{i=1}^m \left( \sum_{j=1}^n x_i (t_j) \frac{b-a}{n}\right)^2 \leqslant \left( \sum_{j=1}^n \sqrt{\sum_{i=1}^m x_i^2 (t_j)} \frac{b-a}{n}\right)^2 = \sigma(|\vec{r}|; P, \xi)^2.\]
+
+Переходя в этом неравенстве к пределу $\lambda \to 0$ (в данном случае это означает $n \to \infty$), получаем утверждение леммы.
+\end{proof}
+
+\begin{proof} [Доказательство теоремы \ref{th:19:1}]
+Рассмотрим произвольное разбиение $P = (t_0, \ldots, t_n)$ отрезка $[a,b]$ и соответствующую ломаную$\vec{r}(t_0) \vec{r}(t_1) \ldots \vec{r}(t_m)$, вписанную в кривую $\gamma$. Для длины $L_P$ этой ломанной, используя формулу Ньютона --- Лейбница, лемму и аддитивность интеграла, получаем
+\[ L_P = \sum_{i=1}^n | \vec{r}(t_i) - \vec{r} (t_{i - 1})| = \sum_{i=1}^n \left| \int_{t_{i-1}}^{t_i} \pvec{r}'(t)~dt \right| \leqslant \sum_{i=1}^n \int_{t_{i-1}}^{t_i} | \pvec{r}'(t)| ~dt = \int_a^b |\pvec{r}'(t)|~dt.\]
+
+Таким образом, длина любой ломанной, вписанной в кривую $\gamma$, ограничена сверху указанным интегралом. По теореме о точных гранях существует и конечна точная верхняя грань длин таких ломаных. А значит, кривая $\gamma$ спрямляема, а ее длина удовлетворяет неравенству
+\[ L(\gamma) = \sup_{P}L_P \leqslant \int_a^b |\pvec{r}'(t)|~dt.\]
+
+Для доказательства равенства рассмотрим произвольное $\varepsilon > 0$. Так как производная векторной функции $\pvec{r}'(t)$ непрерывна на отрезке $[a,b]$, то непрерывны на этом отрезке производные $x_1'(t), \ldots, x_m'(t)$ ее координатных функций. По теореме Кантора эти функции равномерно непрерывны на отрезке $[a,b]$, значит, найдется такое число $\delta > 0$, что $|\pvec{r}'(t) - \pvec{r}'(s)| \leqslant \sum\limits_{j=1}^m |x_j'(t) - x_j'(s)| < \varepsilon$, если $|t - s| < \delta$. Пусть параметр разбиения $P$ меньше $\delta$. Если $t_{i-1} \leqslant t \leqslant t_i$, то $|t - t_i| < \delta$ и поэтому
+\[ |\pvec{r}'(t)| = |\pvec{r}'(t_i) + \pvec{r}'(t) - \pvec{r}'(t_i) | \leqslant |\pvec{r}'(t_i)| + |\pvec{r}'(t) - \pvec{r}'(t_i)| < |\pvec{r}'(t_i)| + \varepsilon.\]
+
+Из доказанного неравенства и свойства монотонности интеграла получаем
+\[ \int_{t_{i-1}}^{t_i} |\pvec{r}'(t)|~dt - \varepsilon \Delta t_i \leqslant \int_{t_{i-1}}^{t_i} (|\pvec{r}'(t_i)| + \varepsilon)~dt - \varepsilon \Delta t_i = |\pvec{r}'(t_i)| \Delta t_i.\]
+
+Используя свойства интеграла, неравенство треугольника, лемму и доказанное ранее неравенство $|\pvec{r}'(t_i) - \pvec{r}'(t)| < \varepsilon$, получаем
+\[ |\pvec{r}'(t_i)| \Delta t_i = \left| \int_{t_{i-1}}^{t_i} \pvec{r}'(t_i)~dt \right| = \left| \int_{t_{i-1}}^{t_i} \pvec{r}'(t)~dt  + \int_{t_{i-1}}^{t_i} (\pvec{r}'(t_i) - \pvec{r}'(t))~dt \right| \leqslant \left| \int_{t_{i-1}}^{t_i} \pvec{r}'(t)~dt \right| +\]
+\[+ \left| \int_{t_{i-1}}^{t_i} (\pvec{r}'(t_i) - \pvec{r}'(t))~dt \right| \leqslant \left\lvert \pvec{r}(t)\bigr\vert_{t_{i-1}}^{t_i} \right\rvert  + \int_{t_{i-1}}^{t_i} |\pvec{r}'(t_i) - \pvec{r}'(t)| ~dt \leqslant |\pvec{r}(t_i) - \pvec{r}(t_{i-1}) | + \varepsilon \Delta t_i.\]
+
+Суммируя доказанные неравенства по $i = 1, \ldots, n$, получаем
+\[\int_a^b |\pvec{r}' (t)| ~dt = \sum_{i=1}^n \int_{t_{i-1}}^{t_i} |\pvec{r}'(t)| ~dt \leqslant \sum_{i=1}^n |\pvec{r}(t_i) - \pvec{r}(t_{i-1}) | + 2 \varepsilon \sum_{i=1}^n \Delta t_i \leqslant L(\gamma) + 2 \varepsilon (b-a).\]
+
+Ввиду проивзольности $\varepsilon$ отсюда сделует, что $\int\limits_a^b |\pvec{r}'(t)|dt \leqslant L(\gamma)$, и это завершает доказательство теоремы.
+\end{proof}
+
+\newpage \section{Вопрос №20} %%%%%%%%%%%%%%%%%%%%%%% Вопрос 20
+\begin{framed}
+Определение длины дуги кривой. Вывести формулы для вычисления с помощью определенного интеграла длины дуги кривой, заданой параметрически, в декартовой или полярной системах координат.
+\end{framed}
 \end{document}  
