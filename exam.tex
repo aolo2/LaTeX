@@ -1170,7 +1170,7 @@ x(a_{j_i}) = a_i,~~~x(\beta_{j_i}) = b_i,~~~x(\alpha_{k_i}) = b_i,~~~x(\beta_{k_
 \end{equation}
 то отображние $\pvec{r}$ определяется действительными функциями $x_1(t), \ldots, x_m(t)$ одного дествительного переменного $t$ с общей областью определения $[a,b] \subseteq \mathbb{R}$, которые называются \textbf{координатными функциями вектор-функции} $\pvec{r}(t)$.\\
 
-Пусть задана вектор-функция $\pvec{r}(t)$. При изменении параметра $t$ конец вектора $\pvec{r}(t)$ опысывает множество Г в пространстве $\mathbb{R}^m$m которое называют \textbf{годографом вектор-функции} $\pvec{r}(t)$ (\hyperref[pic:27:1]{рис. 5}). Если $m = 3$ или $m = 2$, а $t$ --- время, то говорят о траектории движущейся точки.\\
+Пусть задана вектор-функция $\pvec{r}(t)$. При изменении параметра $t$ конец вектора $\pvec{r}(t)$ опысывает множество Г в пространстве $\mathbb{R}^m$, которое называют \textbf{годографом вектор-функции} $\pvec{r}(t)$ (\hyperref[pic:27:1]{рис. 5}). Если $m = 3$ или $m = 2$, а $t$ --- время, то говорят о траектории движущейся точки.\\
 
 Точку $M \in \mathbb{R}^m$ (вектор $\pvec{p} = \overrightarrow{OM}$) называют \textbf{пределом} вектор-функции $\pvec{r}(t)$ при $t \to t_0$, если длина вектора $\pvec{r}(t) - \pvec{p}$ стремится к нулю при $t \to t_0$, т.е. $\lim\limits_{t \to t_0} |\vec{r} - \pvec{p}| = 0$. Обозначают $\lim\limits_{t \to t_0}\pvec{r}(t) = \pvec{p}$ или ``$\pvec{r}(t) \to \pvec{p}$ при $t \to t_0$''.\\
 
@@ -1209,7 +1209,7 @@ x(a_{j_i}) = a_i,~~~x(\beta_{j_i}) = b_i,~~~x(\alpha_{k_i}) = b_i,~~~x(\beta_{k_
 В регулярной точке кривой касательная существует. Ненулевая производная веткорной функции в какой-либо параметризации кривой Г есть направляющий вектор касательной к кривой Г в соответствующей точке.
 \end{theorem}
 \begin{proof}
-Пусть $\pvec{r} = \pvec{r}(t)$, $t \in [a,b]$, --- такое векторное уравенение кривой, что $\pvec{r}'(t_0) \neq 0$ (см. \hyperref[pic:27:1]{рис. 5}). Тогда $\Delta \pvec{r} = \pvec{r}(t) - \pvec{r}(t_0)$ --- направляющий вектор секущей, проходящей через точки с радиус-векторами $\pvec{r}(t_0)$ и $\pvec{r}(t)$. Прои $t \to t_0$ этот вектор стемится к нулю. Вектор $\dfrac{\Delta \pvec{r}}{\Delta t} = \dfrac{\pvec{r}(t) - \pvec{r}(t_0)}{t -t_0}$, $\Delta t = t - t_0$, также есть направляющий вектор данной секущей, и при $t \to t_0$ он стремится к $\pvec{r}'(t_0) \neq \pvec{0}$. А значит, касательная к кривой Г в точке $\pvec{r}(t_0)$ существует, и $\pvec{r}'(t_0)$ --- ее направляющий вектор.
+Пусть $\pvec{r} = \pvec{r}(t)$, $t \in [a,b]$, --- такое векторное уравенение кривой, что $\pvec{r}'(t_0) \neq 0$ (см. \hyperref[pic:27:1]{рис. 5}). Тогда $\Delta \pvec{r} = \pvec{r}(t) - \pvec{r}(t_0)$ --- направляющий вектор секущей, проходящей через точки с радиус-векторами $\pvec{r}(t_0)$ и $\pvec{r}(t)$. При $t \to t_0$ этот вектор стремится к нулю. Вектор $\dfrac{\Delta \pvec{r}}{\Delta t} = \dfrac{\pvec{r}(t) - \pvec{r}(t_0)}{t -t_0}$, $\Delta t = t - t_0$, также есть направляющий вектор данной секущей, и при $t \to t_0$ он стремится к $\pvec{r}'(t_0) \neq \pvec{0}$. А значит, касательная к кривой Г в точке $\pvec{r}(t_0)$ существует, и $\pvec{r}'(t_0)$ --- ее направляющий вектор.
 \end{proof}
 
 \textbf{Геометрический смысл производной векторной функции}: ненулевая производная векторной фукнкции есть направляющий вектор касательной к годографу векторной функции в соответствующей точке.
@@ -1255,7 +1255,7 @@ x(a_{j_i}) = a_i,~~~x(\beta_{j_i}) = b_i,~~~x(\alpha_{k_i}) = b_i,~~~x(\beta_{k_
 
 Пусть дано множество $X$. Система $\tau$ его подмножеств называется \textbf{топологией} на $X$, если выполнены следующие условия (\textbf{аксиомы топологического пространcтва}):
 \begin{enumerate}
-\item Объединения произвольного семейства множеств, принадлежащих $\tau$m принадлежит $\tau$, то есть если $U_{\alpha} \in \tau$ при $\alpha \in I$, то $\bigcup\limits_{\alpha \in I} U_{\alpha} \in \tau$. \label{ax:29:1}
+\item Объединения произвольного семейства множеств, принадлежащих $\tau$, принадлежит $\tau$, то есть если $U_{\alpha} \in \tau$ при $\alpha \in I$, то $\bigcup\limits_{\alpha \in I} U_{\alpha} \in \tau$. \label{ax:29:1}
 \item Пересечение конечного семейства множеств, принадлежащих $\tau$, принадлежит $\tau$, то есть если $U_i \in \tau$ при $i = 1, \ldots, n$, то $\bigcap\limits_{i = 1}^n U_i \in \tau$. \label{ax:29:2}
 \item $X, \varnothing \in \tau$. \label{ax:29:3}
 \end{enumerate}
@@ -1360,6 +1360,26 @@ f(x) = (f_1(x), \ldots, f_m(x)),~~~ x \in A.
 Следует из определений:
 \[ \lim_{\mathcal{B}}f(x) = \lim_{\mathcal{B}}(f_1(x), \ldots, f_m(x)) = (\lim_{\mathcal{B}}f_1(x), \ldots, \lim_{\mathcal{B}}f_m(x)) = (d_1, \ldots, d_m) = d.\]
 \end{proof}
+
+\begin{theorem} \label{th:32:2}
+\begin{enumerate}
+\item[]
+\item[а)] Функция $f : A \to \mathbb{R}^m$ может иметь не более одного предела по данной базе $\mathcal{B}$ в $A$.
+\item[б)] $\lim\limits_{\mathcal{B}} f(x) = d \implies \exists b \in \mathcal{B} : f$ ограничена на $b$.
+\end{enumerate}
+\end{theorem}
+\begin{theorem} \label{th:32:3}
+\[\begin{aligned}
+&g : Y \to \mathbb{R}^m,~~~ \mathcal{B}_y \text{ --- база в } Y \subseteq \mathbb{R}^k,~~~\exists \lim_{\mathcal{B}_y} g(y),\\
+&f : X \to Y,~~~\mathcal{B}_x \text{ --- база в } X \subseteq \mathbb{R}^n,\\
+&\forall b_y \in \mathcal{B}_y ~~~ \exists b_x \in \mathcal{B}_X : ~~~f(b_x) \subseteq b_y
+\end{aligned} \implies \exists \lim_{\mathcal{B}_x}g|f(x)| = \lim_{\mathcal{B}_y} g(y).\]
+\end{theorem}
+
+
+\begin{theorem} \label{th:32:4}
+Если $B \subset A$, $a$ --- предельная точка множества $B$, и $d = \lim\limits_{x \to a} f(x)$ существует, то существует $\lim\limits_{x \to a} f\big\vert_B(x)$, равный $d$.
+\end{theorem}
 
 \newpage \section{Вопрос №33} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Вопрос 33
 \begin{framed}
