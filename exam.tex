@@ -56,6 +56,7 @@
 \title{Экзамен по математическому анализу.\\Второй семестр}
 \date{}
 
+\usepackage{graphicx}
 \begin{document}
 
 \maketitle
@@ -1498,12 +1499,13 @@ f(x) = (f_1(x), \ldots, f_m(x)),~~~ x \in A.
 \end{equation}
 
 Пусть $a$ --- внутренняя точка области $A \subseteq \mathbb{R}^n$ определения функции $f : A \to \mathbb{R}$. \textbf{Матрицей Якоби} векторной функции $f(x)$ в точке $a$ называют матрицу
-\[ f'(a) = \frac{\partial f(a)}{\partial x} = 
+\begin{equation} \label{eq:36:3}
+f'(a) = \frac{\partial f(a)}{\partial x} = 
 \begin{pmatrix}
 \frac{\partial f_1(a)}{\partial x_1} & \dots & \frac{\partial f_1(a)}{\partial x_n}\\
 \vdots & \vdots & \vdots\\
 \frac{\partial f_m(a)}{\partial x_1} & \dots & \frac{\partial f_m(a)}{\partial x_n}
-\end{pmatrix}.\]
+\end{pmatrix}.\end{equation}
 
 \begin{theorem}[1-ое необходимое условие дифференцируемости] \label{th:36:1}
 Если скалярная функция $f : A \subseteq \mathbb{R}^n \to \mathbb{R}$ дифференцируема во внутренней точке $x \in A$ своей области определения, то у этой функции в точке $x$ существуют все частные производные и дифференциал функции равен
@@ -1579,7 +1581,163 @@ f(x) = (f_1(x), \ldots, f_m(x)),~~~ x \in A.
 Обозначим $|(\Delta x, \Delta y)| = \sqrt{(\Delta x)^2+(\Delta y)^2}$ через $\rho$. Тогда
 \[ \frac{|\beta \Delta x + \gamma \Delta y|}{\rho} \leqslant |\beta| \frac{|\Delta x|}{\rho}  + |\gamma| \frac{|\Delta y|}{\rho} \leqslant |\beta| + |\gamma| \to 0\]
 при $\rho \to 0$, так как $|\Delta x | / \rho \leqslant 1$, $|\Delta y| / \rho \leqslant 1$, а $\beta, \gamma \to 0$ при $\rho \to 0$. Следовательно $\beta \Delta x + \gamma \Delta y = o(\rho)$ при $\rho \to 0$. Итак,
-\[ \Delta f(x,y) = f'_x (x,y) \Delta x + f'_y (x,y) \Delta y + o(\rho)~~~~\text{при } \rho \to 0.\]
+\begin{equation}\label{eq:37:3}
+\Delta f(x,y) = f'_x (x,y) \Delta x + f'_y (x,y) \Delta y + o(\rho)~~~~\text{при } \rho \to 0.\end{equation} 
 Другими словами, функция $f$ дифференцируема в точке $(x,y)$.
+\end{proof}
+
+\newpage \section{Вопрос №38} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Вопрос 38
+\begin{framed}
+Дифференцируемые функции многих переменных. Доказать теорему о дифференцировании сложной функции. Цепное правило. Доказать свойство инвариантности дифференциала функции многих переменных.
+\end{framed}
+Пусть функция $f : A \to \mathbb{R}^m$ определена  на множестве $A \subseteq \mathbb{R}^n$, $x \in A$ и $\Delta x = (\Delta x_1, \ldots, \Delta x_n)^{\mathrm{T}}$ --- такой вектор приращений независимых перменных, что точка $x + \Delta x$ тоже принадлежит $A$. В этом случае определено \textbf{полное приращение функции} $f$
+\[ \Delta f(x) = f(x + \Delta x) - f(x),\]
+соответствующее приращению $\Delta x$ перменных в точке $x$. Полное приращение вектрной функции $f = (f_1, \ldots, f_n)^{\mathrm{T}}$ в точке $x$ можно выразить через полные приращение координатных функций $f_1, \ldots, f_n$:
+\begin{equation*} \Delta f(x) = (\Delta f_1(x), \ldots, \Delta f_m(x))^{\mathrm{T}}. \end{equation*}
+Кроме того, $|\Delta x| = \sqrt{(\Delta x_1)^2 + \dots + (\Delta x_n)^2}$.\\
+
+
+Пусть $x$ --- предельная точка множества $A \subseteq \mathbb{R}^n$. Функцию $f: A \to \mathbb{R}^m$ называют \textbf{дифференцируемой в точке} $x$, если ее приращение в этой точке можно представить в виде суммы двух слагаемых, первое --- линейное относительно $\Delta x$, второе --- $o$-малое при $\Delta x \to 0$:
+\begin{equation*}
+\delta f(x) = L \Delta x + \alpha(\Delta x)|\Delta x|,
+\end{equation*}
+где $L$ --- матрица типа $m \times n$, элементы которой не зависят от $\Delta x$, а функция $\alpha(\Delta x)$ является бесконечно малой при $\Delta x \to 0$. Линейную относительно $\Delta x$ часть полного приращения функции $f$, дифференцируемой в точке $x$, называют (\textbf{полным}) \textbf{диффернициалом функции} $f$ и обозначают через $df$.\\
+
+Функцию $f$ называют \textbf{дифференцируемой в области} $X \subseteq \mathbb{R}^n$, если она дифференцируема в каждой точке этой области.\\
+
+\begin{theorem}[дифференцируемость сложной функции] \label{th:38:1}
+Если $X \subseteq \mathbb{R}^n$, $Y \subseteq \mathbb{R}^m$, функция $f : X \to Y$ дифференцируема во внутренней точке $a \in X$, а функция многих переменных $g : Y \to \mathbb{R}^k$ дифференцируема во внутренней точке $b = f(a) \in Y \subseteq \mathbb{R}^m$, то сложная функция $g \circ f : X \to \mathbb{R}^k$ дифференцируема в точке $a$ и выполнено равенство
+\begin{equation} \label{eq:38:1}
+(g \circ f)'(a) = g'(b) f'(a).
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Пусть функция $g$ определена в окрестности $U_{\sigma}(b)$ точки $b$. Так как функция $f$ дифференцируема в точке $a$, она определена в некоторой окрестности этой точки и является непрерывной функцией в точке $a$. Значит, согласно определению непрерывности, существует такая окрестность $U_{\delta}(a)$ из области определения функции $f$, для которой $f(U_{\delta}(a))\subseteq U_{\sigma}(b)$. В окрестности $U_{\delta}(a)$ определена сложная функция $g \circ f$.\\
+
+Пусть $x$ --- прозвольная точка в $U_{\delta}(a)$ и $y = f(x)$, $z = g(y)$. Обозначим $\Delta x = x-a$, $\Delta y = y - b$, $\Delta z = z - c$, где $ c = g(b)$. В силу дифференцируемости функции $f$ в точке $a$ имеем представление
+\begin{equation} \label{eq:38:2}
+\Delta y = f'(a) \Delta x + \alpha(\Delta x)|\Delta x|,~~~~ \alpha(\Delta x) \to 0 \text{ при } \Delta x \to 0.
+\end{equation}
+В силу дифференцируемости $g$ в точке $b$ имеем аналогичное представление
+\begin{equation} \label{eq:38:3}
+\Delta z = g'(b) \Delta y + \beta (\Delta y) |\Delta y|,~~~~ \beta(\Delta y) \to 0 \text{ при } \Delta y \to 0.
+\end{equation}
+Подставив \eqref{eq:38:2} в \eqref{eq:38:3} получим
+\begin{equation} \label{eq:38:4}
+\Delta (g \circ f) (a) = \Delta z = g'(b) f'(a) \Delta x + \gamma (\Delta x) |\Delta x|,
+\end{equation}
+где
+\[\gamma(\Delta x) = g'(b) \alpha (\Delta x) + \beta (\Delta y) \frac{|\Delta y|}{|\Delta x|}.\]
+Имеем
+\[ \begin{aligned}
+\Delta x \to 0 &\implies \alpha(\Delta x) \to 0\\
+&\implies \Delta y \to 0 \implies \beta(\Delta y) \to 0~
+\end{aligned} \biggr\vert \implies \gamma(\Delta x) \to 0,\]
+так как
+\[ \frac{|\Delta y|}{|\Delta x|} = \left| f'(a) \frac{\Delta x}{|\Delta x|} + \alpha(\Delta x) \right|\]
+--- ограниченная функция. Представление \eqref{eq:38:4} означает, что функция $g \circ f$ дифференцируема в точке $a$. При этом произведение $g'(b) \cdot f'(a)$ двух матриц Якоби является, согласно \eqref{eq:38:4}, матрицей Якоби сложной функции $g \circ f$, то есть имеет место равенство \eqref{eq:38:1}.
+\end{proof}
+
+Композицию $(g \circ f) (x) = g(f(x))$ двух функций $f$ и $g$ часто задают в виде $z = g(y)$, $y = f(x)$, вводя дополнительный набор переменных $y \in \mathbb{R}^m$. Переменные в наборе  $y \in \mathbb{R}^m$ называют \textbf{промежуточными переменными}, подчеркивая роль, которую они играют при задании сложной функции. Указанная роль проявляется и при вычилсении частных призводных сложной функции. Используя координатные функции $z_i (y)$, $y_s(x)$ и матрицы Якоби
+\[ g' = \left( \frac{\partial z_i}{\partial y_s} \right),~~~~~ f' = \left( \frac{\partial y_s}{\partial x_j} \right)\]
+векторных функций $g$ и $f$, равенство \eqref{eq:38:1} и матриц Якоби можно записать в координатной форме
+\begin{equation} \label{eq:38:5}
+\frac{\partial z_i}{\partial x_j} = \sum_{s = 1}^m \frac{\partial z_i}{\partial y_s}\frac{\partial y_s}{\partial x_j} = \frac{\partial z_i}{\partial y_1} \frac{\partial y_1}{\partial x_j} + \dots + \frac{\partial z_i}{\partial y_m} \frac{\partial y_m}{\partial x_j},~~~i = 1, \ldots, k,~j = 1, \ldots, n.
+\end{equation}
+
+В равенстввах \eqref{eq:38:5} следует обратить внимание на то, как в них входят промежуточные и остальные переменные. Запись частных производных сложной функции в виде \eqref{eq:38:5} называют \textbf{правилом дифференцирования сложной функции} или \textbf{цепным правилом}.
+
+\begin{remark}[инвариантность формы первого дифференциала] \label{rem:38:1}
+Во внутренних точках области определения функции формула для дифференциала $dz = g'(y)dy$ одинакова для случая, когда $y$ --- вектор агрументов функции $g$, и для случая, когда $y$ --- векторная функция каких-либо других аргументов.
+\end{remark}
+\begin{proof}
+Пусть функция $f : X \to Y$ дифференцируема во внутренней точке $a \in X$, а функция $g : Y \to \mathbb{R}^k$ дифференцируема во внутренней точке $b = f(a) \in Y$. Согласно теореме \ref{th:38:1}, композиция $g \circ f$ двух функций дифференцируема в точке $a$, а ее дифференциал в точке $а$ в соответствии с правилом дифференцирования сложной функции имеет вид
+\[ d(g \circ f) = (g \circ f)'(a)~dx = g'(b) f'(a) ~dx.\]
+Вводя набор промежуточных переменных $y = f(x)$, запишем композицию $g \circ f$ в виде $z = g(y)$, $y = f(x)$. Тогда $dy = f'(a)dx$ --- дифференциал функции $f$, а $dz  =d(g \circ g)$ --- дифференциал композиции $g \circ f$. То есть получается указанная формула при $ y = b$. Точно такой же вид имеет дифференциал функции $z = g(y)$.
+\end{proof}
+
+\newpage \section{Вопрос №39} %%%%%%%%%%%%%%%%%%%%%%%%%%%%% Вопрос 39
+\begin{framed}
+Основные правила дифференцирования. Доказать линейность и правило Лейбница для дифференциала и частных производных функции многих переменных.
+\end{framed}
+
+\begin{theorem}[линейность операции дифференцирования] \label{th:39:1}
+Для функций $f,g: A \to \mathbb{R}^m$, дифференцируемых во внтуренней точке $x \in A \subseteq \mathbb{R}^n$, и произвольного действительного числа $c$ верны равенства:
+\begin{enumerate}
+\item[а)] $(cf)'(x) = cf'(x)$;
+\item[б)] $(f \pm g)'(x) = f'(x) \pm g'(x)$;
+\item[в)] $d(cf)(x) = cdf(x)$;
+\item[г)] $d(f \pm g)(x) = df(x) \pm dg(x)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[правило Лейбница] \label{th:39:2}
+Для скалярных функций $f, g: A \to \mathbb{R}$, дифференцируемых во внутренней точке $x \in A \subseteq \mathbb{R}^n$, верны равенства:
+\begin{enumerate}
+\item[а)] $(fg)'(x) = f(x)g'(x) + g(x) f'(x)$;
+\item[б)] $d(fg)(x) = f(x)dg(x) + g(x)df(x)$;
+\item[в)] $(\dfrac{f}{g})'(x) = \dfrac{g(x)f'(x) - f(x)g'(x)}{[g(x)]^2}$ (в точках, где $g(x) \neq 0$);
+\item[г)] $d(\dfrac{f}{g})(x) = \dfrac{g(x)df(x) - f(x)df(x)}{[g(x)]^2}$ $(g(x) \neq 0)$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}[Доказательства] Следуют из определений. Смотри \eqref{eq:36:3} и \eqref{eq:37:3}. \end{proof}
+
+\begin{theorem}[дифференцируемость сложной функции] \label{th:39:3}
+Если $X \subseteq \mathbb{R}^n$, $Y \subseteq \mathbb{R}^m$, функция $f : X \to Y$ дифференцируема во внутренней точке $a \in X$, а функция многих переменных $g : Y \to \mathbb{R}^k$ дифференцируема во внутренней точке $b = f(a) \in Y \subseteq \mathbb{R}^m$, то сложная функция $g \circ f : X \to \mathbb{R}^k$ дифференцируема в точке $a$ и выполнено равенство
+\begin{equation} \label{eq:38:1}
+(g \circ f)'(a) = g'(b) f'(a).
+\end{equation}
+\end{theorem}
+
+\newpage \section{Вопрос №40} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Вопрос 40
+\begin{framed}
+Частные производные высших порядков. Матрица Гессе. Доказать теорему о смешанных производных.
+\end{framed}
+Предположим, что скалярная функция $f : \mathbb{R}^n \to \mathbb{R}$  во всех точках некоторой окрестности $U_{\delta}(a)$ точки $a$ имеет частную производную $f'_{x_i}(x)$. Эта частная производная сама является функцией многих переменных, определенной в окрестности $U_{\delta}(a)$, и может оказаться, что она имеет частную производную в точке $a$, например по переменному $x_j$. Частную производную
+\[ (f'_{x_i})'_{x_j} (a) = \frac{\partial}{\partial x_j} \left( \frac{\partial f(x)}{\partial x_i} \right) \biggr\vert_{x = a}\]
+функции $f'_{x_i}(x)$ называют \textbf{частной производной второго порядка} функции $f(x)$ в точке $a$ по переменным $x_i$ и $x_j$ и обозначают
+\[ \frac{\partial^2 f(a)}{\partial x_j \partial x_i} ~~~~\text{или}~~~~f''_{x_i x_j}(a).\]
+Производные $f'_{x_i}(x)$ в в связи с этим называют \textbf{частными производными первого порядка}. При $i \neq j$ частные производные второго порядка называют \textbf{смешанными}.\\
+
+\textbf{Частные производные высшего порядка} вводятся так же, как и частные производные второго порядка. Частную производную $k$-го порядка $(k > 1)$ функции многих переменных определяют как частную производную первого порядка от некоторой частной производной $(k-1)$-го порядка этой функции.\\
+
+Если для скалярной функции $f = f(x_1, \ldots, x_n)$ в точке $x$ существуют все частные производные второго порядка, то из них можно составить квадратную матрицу порядка $n$
+\[ f''(x) = 
+\begin{pmatrix}
+\frac{\partial^2 f(x)}{\partial x_1^2} & \frac{\partial^2 f(x)}{\partial x_1 \partial x_2} & \dots & \frac{\partial^2 f(x)}{\partial x_1 \partial x_n}\\
+\frac{\partial^2 f(x)}{\partial x_2 \partial x_1} & \frac{\partial^2 f(x)}{\partial x_2^2} & \dots & \frac{\partial^2 f(x)}{\partial x_2 \partial x_n}\\
+\vdots & \vdots & \vdots  & \vdots\\
+\frac{\partial^2 f(x)}{\partial x_n \partial x_1} & \frac{\partial^2 f(x)}{\partial x_n \partial x_2} & \dots & \frac{\partial^2 f(x)}{\partial x_n^2}
+\end{pmatrix},\]
+которую называют \textbf{матрицей Гессе} функции $f$ в точке $x$.
+
+\begin{theorem} \label{th:40:1}
+Пусть скалярная функция $f(x_1, \ldots, x_n)$ $(n > 1)$ в некотрой окрестности точки $a \in \mathbb{R}^n$ имеет частные производные $f'_{x_i}, f'_{x_j}~(i \neq j), f''_{x_i x_j}$ и $f''_{x_j x_i}$, смешанные производные $f''_{x_i x_j}$ и $f''_{x_j x_i}$ непрерывны в точке $a$ по части переменных $x_i$ и $x_j$. Тогда $f''_{x_i x_j} (a) = f''_{x_j x_i}(a)$.
+\end{theorem}
+\begin{proof}
+Значения всех переменных, кроме $x_i$ и $x_j$, можно считать фиксированными. Поэтому можно вести речь о функции, имеющей только два аргумента $x_j$ и $x_i$, которые удобно переобозанчить: $x_i = x$, $x_j = y$, $a = (p;q)$.\\
+
+Выберем такое число $\delta > 0$, что при $|\Delta x| < \delta$, $|\Delta y| < \delta$ точка $(p + \Delta x; q + \Delta y)$ попадает в окрестность $U$ точки $(p;q)$, где функция $f = f(x,y)$ имеет частные производные первого порядка и смешанные производные $f''_{xy}$ и $f''_{yx}$. В квадрате $|\Delta x| < \delta$, $|\Delta y| < \delta$ определена функция
+\[ g(\Delta x, \Delta y) = f(p + \Delta x, q + \Delta y) - f(p + \Delta x, q) - f(p, q + \Delta y) + f(p,q).\]
+Для функции $\varphi(x) = f(x, q + \Delta y) - f (x,q)$ имеем $g(\Delta x, \Delta y) = \varphi(p + \Delta x) - \varphi(p)$. Функция $\varphi(x)$ на отрезке $[p, p + \Delta x]$ имеет производную
+\[ \varphi'(x) = f'_x (x, q + \Delta y) - f'_x (x,q)\]
+и потому непрерывна на этом отрезке. Следовательно, к функции $\varphi(x)$ на указанном отрезке можно применить теорему Лагранжа:
+\[ g(\Delta x, \Delta y) = \varphi'(p + \theta \Delta x) \Delta x = [f'_x ( p + \theta \Delta x, q + \Delta y) - f'_x (p + \theta \Delta x, q)]\Delta x,~~~\theta \in (0,1).-\]
+Выражение в квадратных скобках представляет собой приращение функции $\lambda (y) = f'_x(p + \theta \Delta x, y)$ одного переменного на отрезке $[q, q + \Delta y]$. На отрезке $[q, q + \Delta y]$ функция $\lambda(y)$ имеет производную
+\[ \lambda'(y) = f''_{xy}(p + \theta \Delta x, y)\]
+и является поэтому непрерывной на этом отркезке. Значит, и к этой функции на указанном отрезке можно применить теорему Лагранжа:
+\[ \lambda(q + \Delta y) - \lambda(q) = \lambda'(q + \theta_1 \Delta y)\Delta y = f''_{xy} (p + \theta \Delta x, q + \theta_1 \Delta y) \Delta y,~~~\theta_1 \in (0,1).\]
+В результате находим, что
+\begin{equation} \label{eq:40:1}
+g(\Delta x, \Delta y) = f''_{xy} (p + \theta \Delta x, q  +\theta_1 \Delta y) \Delta x \Delta y,~~~ \theta, \theta_1 \in (0,1).
+\end{equation}
+Равенство \eqref{eq:40:1} было получено в результате двухкратного применения теоремы Лагранжа, причем сперва она применялась по переменному $x$, затем --- по переменному $y$. Но те же рассуждения можно повторить, поменяв лишь порядок переменных. Тогда получим равенство, аналогичное \eqref{eq:40:1}, но включающее другую смешанную производную:
+\begin{equation} \label{eq:40:2}
+g(\Delta x, \Delta y) = f''_{yx} (p + \theta_3 \Delta x, q  +\theta_2 \Delta y) \Delta y \Delta x,~~~ \theta_2, \theta_3 \in (0,1).
+\end{equation}
+Соединяя равенства \eqref{eq:40:1} и \eqref{eq:40:2} получаем
+\[  f''_{xy} (p + \theta \Delta x, q  +\theta_1 \Delta y) = f''_{yx} (p + \theta_3 \Delta x, q  +\theta_2 \Delta y)\]
+Переходя в этом равенстве к пределу при $(\Delta x; \Delta y) \to (0; 0)$ и используя непрерывность в точке $(p;q)$ смешанных производных, заключаем, что $f''_{xy}(p,q) = f''_{yx}(p,q)$.
 \end{proof}
 \end{document} 
