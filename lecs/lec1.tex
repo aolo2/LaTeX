@@ -35,11 +35,11 @@
 
 Между последовательностями и рядами существует тесная связь. Каждый ряд $\sum a_k$ генерирует специальную последовательность --- последовательность своих частичных сумм $\{ S_n \}$. В то же время любая числовая последовательность $\{ S_n \}$ является последовательностью частичных сумм некоторого ряда, именно, достаточно положить $a_1 = S_1$, $a_n = S_n - S_{n-1}$.
 
-\begin{example}
+\begin{example} \label{ex:1}
 \[ \sum_{n = 1}^{\infty} \frac{1}{n} \text{ --- гармонический ряд.}\]
 \end{example}
 
-\begin{example}
+\begin{example} \label{ex:2}
 \[ \sum_{n = 0}^{\infty} a \cdot q^n \text{ --- геометрическая прогрессия.} \]
 
 \[S_n = \sum_{i=0}^{n} a \cdot q^i = a \cdot \frac{q^{n+1} - 1}{q - 1}.\]
@@ -52,5 +52,52 @@
 \end{example}
 
 \begin{theorem}[Необходимый признак сходимости]
+Если ряд \eqref{eq:1} сходится, то $\lim\limits_{n \to \infty} a_n = 0.$
 \end{theorem}
+\begin{proof}
+\[ a_n = S_n - S_{n-1} \to S - S = 0.\]
+\end{proof}
+
+\begin{example} \label{ex:3}
+В случае из примера \ref{ex:2}, когда $q = -1$, $a_n = (-1)^n \cdot a$: суммы ряда не существует (нет предела), ряд расходится.
+\end{example}
+
+\begin{example} \label{ex:4}
+Рассмотрим пример \ref{ex:1}. В нем
+\[ S_{2n} = S_n + \frac{1}{n + 1} + \dots + \frac{1}{2n} > S_n + \underbrace{\frac{1}{2n} + \dots + \frac{1}{2n}}_{\text{n раз}} = S_n + \frac{1}{2}.\]
+Рассмотрим $n = 2^p$:
+\[S_n > S_{\frac{1}{2}} + \frac{1}{2} > S_{\frac{1}{4}} + \frac{1}{2} > \dots > \frac{p}{2}.\]
+Значит, $\{ S_{2^p}\}$ неограничена, а следовательно, расходится. Тогда и $\{ S_n \}$ расходится. В итоге получаем, что гармонический ряд расходится, при том, что $a_n \to 0$.\\
+\end{example}
+
+Рассмотрим ряд
+\begin{equation} \label{eq:2}
+\sum_{n = 1}^{\infty} a_n = S_{n-1} + R_k.
+\end{equation}
+$R_k = \sum\limits_{n = k}^{\infty} a_n$ --- \textbf{остаток} ряда \eqref{eq:2}.
+
+\begin{theorem}[Об остатке]
+Ряд \eqref{eq:2} сходится $\iff$ сходятся его остатки.
+\end{theorem}
+\begin{proof}
+\[S_n = \sum\limits_{i = 1}^{n}a_i,~S_l' = \sum\limits_{i = k}^{k + l} a_i,~S_{k+l} = S_{k-1} + S_l'.\]\\
+
+''$\implies$``~:
+\[ \lim_{k \to \infty}S_{k+l} = S \implies  S_l \to S - S_{k-1}.\]
+
+'' $\Longleftarrow$ ``~:
+\[ S_l' \to S' \implies S_{k+l} \to S_{k-1} + S'.\]
+\end{proof}
+
+\section{Операции над рядами}
+
+\begin{enumerate}
+\item Произведение ряда \eqref{eq:2} на число $\lambda$:
+\[ \lambda \sum_{n = 1}^{\infty} a_n = \sum_{n = 1}^{\infty} (\lambda a_n).\]
+\item Сумма (разность) двух рядов:
+\[ \sum_{i = 1}^{\infty} a_i \pm \sum_{i = 1}^{\infty} b_i = \sum_{i = 1}^{\infty} (a_i \pm b_i).\]
+\end{enumerate}
+
+\section{Признаки сравнения}
+\subsection{Знакоположительные ряды}
 \end{document}
