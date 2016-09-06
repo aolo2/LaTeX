@@ -1,0 +1,56 @@
+\documentclass[12pt]{report}
+\RequirePackage[l2tabu, orthodox]{nag}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[top=2.3cm, bottom=3.3cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amssymb,amsthm,mathtools,microtype,hyperref}
+
+\newtheorem{theorem}{Теорема}
+\newtheorem{example}{Пример}
+
+\renewcommand{\thesection}{\arabic{section}}
+
+\delimitershortfall-1sp
+\newcommand\abs[1]{\left|#1\right|}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,      
+    urlcolor=black,
+    pdftitle={Лекция 1. Числовые ряды},
+    bookmarks=true,
+}
+
+\begin{document}
+\section{Основные понятия}
+Пусть $\{a_n\}$ --- произвольная числовая последовательность. Запись этой последовательности в виде
+\begin{equation} a_1 + a_2 + \ldots + a_n + \ldots~~~~\text{или}~~~~\sum_{k=1}^{\infty}a_k \end{equation} \label{eq:1}
+называют \textbf{числовым рядом}.
+
+Сумма нескольких последовательных членов ряда $S_n = a_1 + \ldots + a_n$ называется \textbf{частичной суммой} этого ряда. Частичные суммы $S_n$ образуют последовательность, называемую \textbf{последовательностью частичных сумм}. Предел последовательности частичных сумм, если он существует, называют \textbf{суммой ряда}. Таким образом, под суммой $S$ ряда \eqref{eq:1} понимается предел
+\[ S = \lim_{n \to \infty} \left( \sum_{k=1}^{n} a_k \right).\]
+
+Если указанный предел частичных сумм ряда существует, то говорят, что \textbf{ряд сходится}. В противном случае говорят, что \textbf{ряд расходится}.
+
+Между последовательностями и рядами существует тесная связь. Каждый ряд $\sum a_k$ генерирует специальную последовательность --- последовательность своих частичных сумм $\{ S_n \}$. В то же время любая числовая последовательность $\{ S_n \}$ является последовательностью частичных сумм некоторого ряда, именно, достаточно положить $a_1 = S_1$, $a_n = S_n - S_{n-1}$.
+
+\begin{example}
+\[ \sum_{n = 1}^{\infty} \frac{1}{n} \text{ --- гармонический ряд.}\]
+\end{example}
+
+\begin{example}
+\[ \sum_{n = 0}^{\infty} a \cdot q^n \text{ --- геометрическая прогрессия.} \]
+
+\[S_n = \sum_{i=0}^{n} a \cdot q^i = a \cdot \frac{q^{n+1} - 1}{q - 1}.\]
+При $n \to \infty$ имеем два случая:
+\begin{enumerate}
+\item $\abs{q} < 1$, $\lim\limits_{n \to \infty} q^n = 0$, $S_n \to \dfrac{a}{q - 1}$;
+\item $\abs{q} > 1$, $\lim\limits_{n \to \infty} q^{n+1}$ не существует.
+\end{enumerate}
+Итого: $\sum\limits_{n = 0}^{\infty} a \cdot q ^n$ сходится при $\abs{q} < 1$, расходится при $\abs{q} > 1$.
+\end{example}
+
+\begin{theorem}[Необходимый признак сходимости]
+\end{theorem}
+\end{document}
