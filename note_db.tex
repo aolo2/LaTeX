@@ -1,0 +1,968 @@
+\documentclass[14pt]{extarticle}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath, amssymb, titletoc, titlesec, tikz, pgfplots, csquotes, tabularx, fontspec, graphicx, caption, indentfirst, framed, listings, color}
+\usepackage[top=2cm, bottom=2cm, left=3cm, right=1cm]{geometry}
+\usepackage[shortcuts]{extdash}
+\usepackage[normalem]{ulem}
+\usepackage[hidelinks]{hyperref}
+
+\usetikzlibrary{er}
+\usetikzlibrary{shapes.multipart}
+\usetikzlibrary{matrix}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shadows}
+\usetikzlibrary{calc}
+
+\setmainfont{Times New Roman}
+\linespread{1.5}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{ %
+  backgroundcolor=\color{white},    
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,          
+  breaklines=true,                  
+  captionpos=b,                     
+  commentstyle=\color{mygreen},     
+  deletekeywords={...},             
+  escapeinside={\%*}{*)},           
+  extendedchars=true,               
+  frame=single,	                    
+  keepspaces=true,                  
+  keywordstyle=\color{blue},        
+  language=JavaScript,                     
+  numbers=left,
+  numbersep=8pt,                    
+  numberstyle=\tiny\color{mygray},  
+  rulecolor=\color{black},          
+  showspaces=false,                 
+  showstringspaces=false,           
+  showtabs=false,                   
+  stepnumber=1,                     
+  stringstyle=\color{mymauve},      
+  tabsize=2,	                    
+  title=\lstname,                   
+  belowskip=-2.0 \baselineskip,
+  aboveskip=1.0 \baselineskip
+}
+
+\makeatletter
+\pgfarrowsdeclare{crow's foot}{crow's foot}
+{
+  \pgfarrowsleftextend{+-.5\pgflinewidth}%
+  \pgfarrowsrightextend{+.5\pgflinewidth}%
+}
+{
+  \pgfutil@tempdima=0.6pt%
+  %\advance\pgfutil@tempdima by.25\pgflinewidth%
+  \pgfsetdash{}{+0pt}%
+  \pgfsetmiterjoin%
+  \pgfpathmoveto{\pgfqpoint{0pt}{-9\pgfutil@tempdima}}%
+  \pgfpathlineto{\pgfqpoint{-13\pgfutil@tempdima}{0pt}}%
+  \pgfpathlineto{\pgfqpoint{0pt}{9\pgfutil@tempdima}}%
+  \pgfpathmoveto{\pgfqpoint{0\pgfutil@tempdima}{0\pgfutil@tempdima}}%
+  \pgfpathmoveto{\pgfqpoint{-8pt}{-6pt}}% 
+  \pgfpathlineto{\pgfqpoint{-8pt}{-6pt}}%  
+  \pgfpathlineto{\pgfqpoint{-8pt}{6pt}}% 
+  \pgfusepathqstroke%
+}
+
+\pgfarrowsdeclare{omany}{omany}
+{
+  \pgfarrowsleftextend{+-.5\pgflinewidth}%
+  \pgfarrowsrightextend{+.5\pgflinewidth}%
+}
+{
+  \pgfutil@tempdima=0.6pt%
+  %\advance\pgfutil@tempdima by.25\pgflinewidth%
+  \pgfsetdash{}{+0pt}%
+  \pgfsetmiterjoin%
+  \pgfpathmoveto{\pgfqpoint{0pt}{-9\pgfutil@tempdima}}%
+  \pgfpathlineto{\pgfqpoint{-13\pgfutil@tempdima}{0pt}}%
+  \pgfpathlineto{\pgfqpoint{0pt}{9\pgfutil@tempdima}}%
+  \pgfpathmoveto{\pgfqpoint{0\pgfutil@tempdima}{0\pgfutil@tempdima}}%  
+  \pgfpathmoveto{\pgfqpoint{0\pgfutil@tempdima}{0\pgfutil@tempdima}}%
+  \pgfpathmoveto{\pgfqpoint{-6pt}{-6pt}}% 
+    \pgfpathcircle{\pgfpoint{-11.5pt}{0}} {3.5pt}
+  \pgfusepathqstroke%
+}
+
+\pgfarrowsdeclare{one}{one}
+{
+  \pgfarrowsleftextend{+-.5\pgflinewidth}%
+  \pgfarrowsrightextend{+.5\pgflinewidth}%
+}
+{
+  \pgfutil@tempdima=0.6pt%
+  %\advance\pgfutil@tempdima by.25\pgflinewidth%
+  \pgfsetdash{}{+0pt}%
+  \pgfsetmiterjoin%
+  \pgfpathmoveto{\pgfqpoint{0\pgfutil@tempdima}{0\pgfutil@tempdima}}%
+  \pgfpathmoveto{\pgfqpoint{-6pt}{-6pt}}% 
+  \pgfpathlineto{\pgfqpoint{-6pt}{-6pt}}%  
+  \pgfpathlineto{\pgfqpoint{-6pt}{6pt}}% 
+  \pgfpathmoveto{\pgfqpoint{0\pgfutil@tempdima}{0\pgfutil@tempdima}}%
+  \pgfpathmoveto{\pgfqpoint{-8pt}{-6pt}}% 
+  \pgfpathlineto{\pgfqpoint{-8pt}{-6pt}}%  
+  \pgfpathlineto{\pgfqpoint{-8pt}{6pt}}%    
+  \pgfusepathqstroke%
+}
+
+\pgfarrowsdeclare{oone}{oone}
+{
+  \pgfarrowsleftextend{+-.5\pgflinewidth}%
+  \pgfarrowsrightextend{+.5\pgflinewidth}%
+}
+{
+  \pgfutil@tempdima=0.6pt%
+  %\advance\pgfutil@tempdima by.25\pgflinewidth%
+  \pgfsetdash{}{+0pt}%
+  \pgfsetmiterjoin%
+  \pgfpathmoveto{\pgfqpoint{0\pgfutil@tempdima}{0\pgfutil@tempdima}}%
+  \pgfpathmoveto{\pgfqpoint{-6pt}{-6pt}}% 
+  \pgfpathlineto{\pgfqpoint{-6pt}{-6pt}}%  
+  \pgfpathlineto{\pgfqpoint{-6pt}{6pt}}%    
+  \pgfusepathqstroke%
+  \pgfutil@tempdima=0.6pt%
+  %\advance\pgfutil@tempdima by.25\pgflinewidth%
+  \pgfsetdash{}{+0pt}%
+  \pgfsetmiterjoin%
+  \pgfpathcircle{\pgfpoint{-11.5pt}{0}} {3.5pt}
+  \pgfusepathqstroke%
+}
+
+\tikzset{
+    entity/.code={
+        \tikzset{
+            label=above:#1,
+            name=#1,
+            inner sep=0pt,
+            every entity/.try,
+            fill=white,
+            general shadow={
+                shadow xshift=0.0625in,
+                shadow yshift=-0.0625in,
+                opacity=0.5,
+                fill=black!50
+            }
+        }%
+        \def\entityname{#1}%
+    },
+    entity anchor/.style={matrix anchor=#1.center},
+    every entity/.style={
+            draw,
+    },
+    every property/.style={
+        inner xsep=0.25cm, inner ysep=0.15cm, anchor=west, text width=1in
+    },
+    zig zag to/.style={
+        to path={(\tikztostart) -| ($(\tikztostart)!#1!(\tikztotarget)$) |- (\tikztotarget)}
+    },
+    zig zag to/.default=0.5,
+    one to one/.style={
+        one-one, zig zag to
+    },    
+    one to many/.style={
+        one-crow's foot, zig zag to,
+    },
+    one to omany/.style={
+        one-omany, zig zag to
+    },      
+    many to one/.style={
+        crow's foot-one, zig zag to
+    },
+    many to many/.style={
+        crow's foot-crow's foot, zig zag to
+    },
+    oone to many/.style={
+        oone-crow's foot, zig zag to
+    },
+    oone to one/.style={
+        oone-one, zig zag to
+    },
+    oone to oone/.style={
+        oone-oone, zig zag to
+    },
+    many to omany/.style={
+        crow's foot-omany, zig zag to
+    }
+}
+\def\property#1{\node[name=\entityname-#1, every property/.try]{#1};}
+\def\properties{\begingroup\catcode`\_=11\relax\processproperties}
+\def\processproperties#1{\endgroup%
+    \def\propertycode{}%
+    \foreach \p in {#1}{%
+        \expandafter\expandafter\expandafter\gdef\expandafter\expandafter\expandafter\propertycode%
+            \expandafter\expandafter\expandafter{\expandafter\propertycode\expandafter\property\expandafter{\p}\\}%
+    }%
+    \propertycode%
+}
+
+
+\begin{document}
+\begin{center}
+Министерство образования и науки Российской Федерации Федеральное государственное бюджетное образовательное учреждение высшего профессионального образования\\ \bigskip \textbf{\enquote{Московский государственный технический университет имени Н.Э. Баумана} \\ \smallskip (МГТУ им. Н. Э. Баумана)}
+\end{center}
+\noindent\rule{\textwidth}{1pt}
+\smallskip\\
+ФАКУЛЬТЕТ \enquote{Информатика и системы управления} \smallskip\\
+КАФЕДРА \enquote{Теоретическая информатика и компьютерные технологии}\\
+\begin{center}
+\Large{\textbf{РАСЧЕТНО-ПОЯСНИТЕЛЬНАЯ ЗАПИСКА К КУРСОВОМУ ПРОЕКТУ НА ТЕМУ: \bigskip\bigskip\\
+\textit{\enquote{Создание многофункционального\\ сайта кафедры ИУ-9}}}}
+\end{center}
+\vfill
+\begin{tabularx}{\textwidth}{X c r}
+Студент ИУ9-62 & $\underset{\text{(Подпись, дата)}}{\makebox[2.0in]{\hrulefill}}$ & А.А. Олохтонов\\
+& & \\
+Руководитель курсового проекта  & $\underset{\text{(Подпись, дата)}}{\makebox[2.0in]{\hrulefill}}$ & И.Э. Вишняков \bigskip\bigskip\\
+\end{tabularx}
+\begin{center}
+Москва, 2018 г.
+\end{center}
+\thispagestyle{empty}
+
+\newpage
+\tableofcontents
+
+\newpage
+\section*{Введение}
+\addcontentsline{toc}{section}{Введение}
+На данный момент сайт кафедры ИУ-9 \cite{iu9-old} является скорее подробной аннотацией, чем полноценным веб-порталом. Учитывая, что текущая страница \hyperref[http://iu9.bmstu.ru]{iu9.bmstu.ru} занимает первое место среди результатов запроса \enquote{кафедра иу9} в четырех самых популярных поисковых системах России (Яндекс, Google, go.mail.ru и Рамблер \cite{iu9-yandex, iu9-google, iu9-mail, iu9-rambler}), для многих она становится первым знакомством с кафедрой.
+
+Более того, сайт кафедры потенциально может выполнять более одной функции. Так, для абитуриентов и прочих заинтересованных лиц он предоставляет справочную информацию о поступлении и кафедре в целом, а для студентов и преподавателей может служить универсальным средством односторонней и двусторонней связи, организации и проведения кафедральных мероприятий.
+
+Целью данного курсового проекта является написание нового сайта кафедры ИУ\=/9. Задачи, таким образом, включают: анализ страниц и оформления существующего сайта; перенос информации на новый сайт; создание недостающих страниц; разработку строгого единого стиля; разработку требований к новому функционалу сайта и построение модели данных на основании этих требований; выбор программных средств и реализацию нового серверного и клиентского функционала; тестирование полученной реализации на работоспособность и удобство использования.
+
+
+\newpage
+\section{Разработка функционала}
+Для удобства весь функционал сайта был разделен на три логические части: 
+\begin{enumerate}
+\item статические страницы, предназначенные для просмотра всеми пользователями и не содержащие интерактивных элементов;
+\item статические страницы с динамическим наполнением, содержание которых определяется типом учетной записи пользователя;
+\item интерактивные страницы, позволяющие взаимодействовать с сервером при помощи кнопок, текстовых полей и т.п.
+\end{enumerate}
+
+Очевидно, что для второго и третьего пунктов необходимо разработать систему регистрации и авторизации, причем регистрацию пользователей нужно ограничить: пользователь может лишь оставить заявку, а окончательное решение о добавлении учетной записи принимает администратор сайта.
+
+Упомянутое одностороннее взаимодействие было решено реализовать в виде новостной ленты, где для каждой статьи можно указать целевую аудиторию. Также предусмотрена возможность создания кафедральных событий: преподаватель может выбрать тип события, заполнить описание, прикрепить файлы и указать участников, которые получат уведомления.
+
+Для разграничения доступа была разработана ролевая модель, в которой каждому пользователю приписывается одна или несколько ролей, которые определяют доступный этому пользователю функционал сайта.
+
+
+\subsection{Статические страницы}
+Существующий сайт кафедры ИУ-9 содержит три страницы: \enquote{главная}, \enquote{абитуриенту} и \enquote{наука}. В новой версии сайта эти страницы сохранены, однако информация для абитуриентов дополнена и разбита на три отдельных страницы: \enquote{поступление}, \enquote{наши выпускники} и \enquote{учебный план}. Также добавлена страница \enquote{новости}. Для навигации в верхней части всех страниц было добавлено меню, содержащее ссылки на страницы и кнопку \enquote{войти}.
+
+\subsubsection{Главная странциа}
+Главная страница по сути единолично составляет первое впечатление о сайте (а для многих и о кафедре), поэтому ей стоит уделить особое внимание. В новой версии сайта главную страницу решено было упросить относительно существующей версии, оставив лишь три небольших блока: \enquote{о кафедре}, \enquote{особенности подготовки} и \enquote{отличия от других вузов и кафедр}.
+
+\subsubsection{Наука}
+Оригинальная версия страницы с научной деятельностью уже содержит всю необходимую информацию, поэтому оказалось достаточно привести её к более читаемому виду, чего удалось достичь по сути автоматически, применив к ней новый единый стиль.
+
+\subsubsection{Новости}
+Страница новостей играет двойную роль: для читателей --- это новостная лента, содержание которой определяется данными учетной записи (либо её отсутствием в случае незарегистрированных посетителей сайта); для пользователей с более высоким уровнем доступа страница должна содержать форму написания новости и способ редактирования уже отправленных сюжетов. 
+
+Также на странице новостей решено было выводить краткую информацию по событиям, в которых данный пользователь принимает участие. Каждое событие оформлено в виде ссылки на страницу с более подробной информацией.
+
+\subsubsection{Поступление}
+Так же, как и страница \enquote{наука}, оригинальная версия этой страницы содержит всю необходимую информацию, поэтому остается лишь перенести эту информацию на новый сайт и применить к ней новую таблицу стилей.
+
+\subsubsection{Наши выпускники}
+Одна из страниц, которой нет на оригинальном сайте кафедры, это \enquote{наши выпускники}, однако её стоит добавить как минимум по двум причинам. Во-первых, трудоустройство выпускников --- для многих решающий фактор при выборе места обучения. Во-вторых, крайне высокий процент  выпускников кафедры ИУ-9 работает по специальности, что также встречается нечасто и заслуживает упоминания.
+
+\subsubsection{Учебный план}
+Учебный план был доступен для скачивания со старой версии сайта кафедры \cite{iu9-superold}, но впоследствии удален. На новой странице \enquote{учебный план} решено представить план в двух версиях: оформленный в читаемом виде и разбитый по курсам и семестрам; в виде таблицы, доступной для скачивания в формате pdf.
+
+\subsection{Страницы с динамическим наполнением}
+Страницы с динамическим наполнением подразумевают реализацию с двух сторон: со стороны клиента (то есть клиентского JavaScript кода) и со стороны сервера. С клиентской стороны необходимо скрыть те элементы, которые пользователь видеть не должен и запросить данные с сервера, чтобы заполнить оставшиеся элементы нужной информацией. С серверной стороны необходимо опознать от какого пользователя получен запрос, для того чтобы отправить клиенту только ту информацию, к которой у него есть доступ. Такая валидация необходима, потому что клиент может \enquote{представиться} совсем не тем, кем является на самом деле, изменив клиентский JavaScript код или cookie \cite{http-cookie} встроенными средствами браузера или сделав запрос к серверу напрямую, к примеру при помощи утилиты curl \cite{curl}.
+
+Примером страницы с динамическим наполнением являются упомянутая ранее новостная лента, содержание которой целиком определяется уже после загрузки статической части страницы. Однако в процессе разработки функционала публикации и редактирования новостей возникла идея универсального встраиваемого модуля, который бы позволял редактировать любой текст на сайте прямо из браузера.
+
+
+\subsubsection{Editbox}
+Такой встраиваемый элемент должен позволять редактировать блоки текста в формате Markdown \cite{markdown}, гораздо более удобным для человека, чем html. Также предусмотрена возможность предпросмотра и сохранения текстов. Для того чтобы редактирование можно было продолжить с другого компьютера, исходные коды должны сохраняться на сервере и подгружаться при нажатии кнопки \enquote{редактировать}. Более того, для пользователей, которым не доступен функционал редактирования, необходим отдельный запрос на получение уже преобразованных блоков. Идентификатором блока будет служить его id на странице. С клиентской стороны нужно реализовать интерфейс для редактирования, предпросмотра и сохранения кодов в markdown.
+
+\subsection{Интерактивные страницы}
+Интерактивными назовем страницы, подразумевающие взаимодействие клиента с сервером. Чаще всего такое взаимодействие реализуется при помощи различных кнопок и форм ввода, к которым привязаны различные запросы к серверу.
+
+Интерактивными элементами сайта кафедры таким образом будут формы авторизации и регистрации, форма публикации новостей, вышеупомянутый editbox, административная страница \enquote{управление} и страница проведения события. Помимо взаимодействия с сервером также необходимо производить валидацию вводимых данных со стороны клиента, чтобы минимизировать возможность ошибок в отправляемых данных.
+
+
+\subsubsection{Публикация новостей}
+Форма публикации новостей состоит из текстового поля для заголовка и поля для тела новости. Для выбора целевой аудитории предусмотрен выпадающий список, позволяющий выбрать студентов с точностью до группы, преподавателей и всех. Чтобы упростить редактирование уже опубликованных новостей, каждый элемент новостной ленты состоит из заголовка, мета-информации (автор новости, дата и время) и editbox с телом новости.
+
+\subsubsection{Управление}
+Страница управления содержит весь административный функционал: создание событий, обработка заявок на регистрацию, а также добавление пользователей напрямую (заявку на можно оставить только для студенческой учетной записи). При этом создание событий доступно всем преподавателям, а остальной функционал --- только администратору сайта. Обработка заявок позволяет принять или отклонить заявку. Прямая регистрация пользователей позволяет задать фамилию, имя, логин, пароль и роль нового пользователя, после чего учетная запись будет мгновенно создана, не попадая в список заявок.
+
+\subsubsection{Регистрация и авторизация}
+Для пользователя, не прошедшего авторизацию, в верхнем меню отображается кнопка \enquote{войти}. Нажатие на неё открывает форму авторизации. Для авторизованного пользователя отображается кнопка \enquote{выйти}. В случае успешной авторизации на сервере заводится сессия и её идентификатор устанавливается в cookie браузера, с которого эта авторизация была произведена. Сессия считается активной в течение суток с последнего успешного запроса.
+
+Форма регистрации позволяет указать фамилию, имя, желаемый логин и пароль, группу, в которой состоит регистрируемый студент. Полученная заявка появляется на странице управления. Введенный логин и пароль становятся пригодными для авторизации только после подтверждения заявки. В случае если логин или пароль введены неверно --- отображается сообщение об ошибке. 
+
+\subsection{Ролевая модель для доступа}
+Так как многие запросы к серверу должны быть доступны только для определенных пользователей, было решено ввести ролевую модель доступа \cite{rbac}. А именно, при регистрации каждому пользователю приписывается некоторая роль. Для каждой из ролей определены набор разрешенных и запрещенных запросов, и на основании этих наборов каждый запрос проверяется на корректность. Если обнаруживается нарушение --- пользователь получает вместо данных отказ в доступе. Так как сессия, содержащая информацию о роли пользователя, хранится со стороны сервера, такая модель обеспечивает довольно надежное разграничение доступа к данным.
+
+\subsubsection{Посетитель}
+Незарегистрированный посетитель не входит в ролевую модель, однако требует упоминания. Дело в том, что большинство страниц, доступных для таких пользователей, статические, то есть не содержат дополнительных запросов к серверу, а потому не требуют и проверки. Исключение составляют запросы на получение содержание editbox и публичных новостей, а также запрос на авторизацию. 
+
+\subsubsection{Студент}
+Роль студента предусматривает базовый функционал: получение новостей, предназначенных для той группы, в которой состоит данный студент и участие в событиях (включает в себя получение данных о событии и отправку сообщений в чат события).
+
+\subsubsection{Преподаватель}
+Роль преподавателя полностью включает в себя роль студента (для преподавателя разрешены все запросы, разрешенные студенту). Помимо этого, для преподавателя доступны запросы создания события и сопутствующие вспомогательные запросы: получение существующих студенческих групп, зарегистрированных преподавателей, списка предметов и типов мероприятий. Также для преподавателя доступен запрос на завершение события.
+
+\subsubsection{Редактор}
+Роль редактора также целиком включает все возможности студента. Дополнительный функционал, доступный редактору: получение исходных кодов editbox, и запрос на их обновление. Также редактор может публиковать и редактировать новости.
+
+\subsubsection{Адмнистратор}
+Администратор сайта имеет доступ ко всем запросам без какого-либо ограничения. То есть в отличии от студента, преподавателя и редактора, администратор может отклонять и принимать заявки на регистрацию и добавлять новых пользователей напрямую.
+
+\subsection{Обмен сообщениями}
+Для удобного многостороннего общения в рамках одного события предусмотрена возможность чата, то есть обмена мгновенными сообщениями. Причем необходимо реализовать не только отправку и получение (и отображение) сообщений, но и получение истории переписки для данного чата. Так как такой чат может быть прикреплен к событию, необходимо предусмотреть возможность создания чат-комнаты с конкретным набором участников. Тогда пользователь может присоединиться к конкретному чату, и все отправленные сообщения будут приходить только участникам этого же чата. Также необходимо предусмотреть возможность закрытия чат-комнаты (например, когда событие завершилось).
+
+\subsection{События}
+Событие описывается названием, предметом, типом события, датой и временем его проведения. Участниками события могут быть группы студентов и конкретные преподаватели. Также к событию можно прикрепить файлы, то есть загрузить их на сервер и прикрепить гиперссылку к событию. Опционально, на время существования события можно создать чат-комнату, доступную только участникам события.
+
+\subsubsection{Создание и завершение события}
+При создании события нужно указать тип и предмет. Если одного или их обоих нет в выпадающем списке --- можно выбрать пункт \enquote{другой} и ввести нужное значение в текстовом поле. После создания события новый тип (предмет) сохранится и будет доступен в виде пункта выпадающего списка при создании всех последующих событий. Также все его участники должны получить уведомление (на странице новостей).
+
+После того как преподаватель завершил событие, оно должно пропасть из новостей всех участников. В случае, если студент попробует пройти на страницу события по прямой ссылке, он должен получить информацию о том, что событие удалено. Чат, прикрепленный к завершенному событию должен закрыться, то есть не принимать и не рассылать сообщения.
+
+\newpage
+\section{Реализация}
+\subsection{Модель данных}
+Учитывая описанные требования, имеет смысл включить в модель данных следующие сущности: пользователь, новость, элемент editbox, роль, заявка на регистрацию, чат-комната, событие, тип и предмет события. Тогда ER-диаграмма принимает следующий вид:
+\begin{center}
+\begin{tikzpicture}[every node/.style={font=\ttfamily}, node distance=0.5in]
+\matrix [entity=User] {
+    \properties{
+        _id,
+        login,
+        first_name,
+        last_name,
+        roles,
+        group,
+        pwd_hash,
+        pwd_salt
+    }
+};
+
+\matrix [entity=Role, left=of User]  {
+    \properties{
+        _id,        
+        name,
+        requests
+    }
+};
+
+\matrix  [entity=Application, right=of User]  {
+    \properties{
+        _id,
+        first_name,
+        last_name,
+        login,
+        group,
+        pwd_hash,
+        pwd_salt
+    }
+};
+
+\matrix  [entity=Chatroom, below=of Application]  {
+    \properties{
+        _id,
+        messages
+    }
+};
+
+\matrix  [entity=Article, above=of Role]  {
+    \properties{
+        _id,
+        title,
+        datetime,
+        public,
+        target
+    }
+};
+
+\matrix  [entity=Editbox, above=of User]  {
+    \properties{
+        _id,
+        box_id,
+        markdown
+    }
+};
+
+\matrix  [entity=Event, below=of Role]  {
+    \properties{
+        _id,
+        type,
+        subject,
+        title,
+        datetime,
+        files,
+        finished
+    }
+};
+
+\matrix  [entity=Type, above=of Application]  {
+    \properties{
+        _id,
+        id,
+        name
+    }
+};
+
+\matrix  [entity=Subject, below=of Chatroom, node distance=0.25in]  {
+    \properties{
+        _id,
+        id,
+        name
+    }
+};
+
+\draw [oone to many] (User) to (Role);
+\draw [many to omany] (User) to (Chatroom-_id);
+\draw [many to omany] (User-pwd_salt) to (Event-title);
+\draw [one to one] (Article-datetime) to (Editbox);
+\draw [oone to oone] (Chatroom-messages) to (Event-finished);
+
+\end{tikzpicture}\\
+Схема 1 --- ER-модель
+\end{center}
+
+\subsection{Выбор технологий}
+Для разработки клиентской части сайта использовался JavaScript без каких-либо дополнительных библиотек (за исключением одного файла showdown.min.js \cite{showdown}, используемого для предпросмотра изменений editbox). Такое решение было принято для уменьшения размера скачиваемого клиентом кода и, как следствие, ускорения загрузки страниц.
+
+Разработку сервера было решено вести на Node.js \cite{node-js} с использованием фреймворка express, так как этот набор инструментов предоставляет удобный компромисс между скоростью разработки и быстродействием написанного кода. Более того, написание серверного кода на Node JS позволяет легко изменять и дополнять функционал при помощи вcтроенного пакетного менеджера npm \cite{npm}.
+В качестве СУБД была выбрана документо-ориентированная MongoDB. Причиной такому выбору послужили, в основном, два факта: относительная простота реализуемой модели данных и удобство работы с JSON в JavaScript приложениях.
+
+В целях повышения производительности было также решено использовать СУБД Redis, являющуюся высокопроизводительным хранилищем типа “ключ-значение” \cite{Redis}. Redis используется для хранения данных, к которым требуется регулярный доступ в процессе работы сервера. К примеру, такой информацией являются сессии пользователей и таблица ролей.
+
+\subsubsection{MongoDB}
+В СУБД MongoDB данные представляются в виде BSON \cite{bson} (супермножество JSON) документов и объединяются в коллекции. В данном курсовом проекте предусмотрены следующие коллекции:
+\begin{enumerate}
+\item[] \texttt{users} --- коллекция зарегистрированных пользователей. Каждый документ содержит: фамилию, имя, логин, массив названий ролей и хеш и соль пароля. В случае, если одна из ролей пользователя --- студент, то пользователь также содержит поле group, содержащее значащую часть индекса группы студента (н: 12 или 71);
+\item[] \texttt{roles} --- возможные роли пользователей. Документ содержит название роли и словарь, где ключем является конкатенация через пробел метода и пути HTTP запроса (н: \texttt{GET /users/applications}), а значением --- еще один словарь. Этот словарь на данный момент содержит только один ключ --- поле \texttt{available}, значением же является \texttt{true} или \texttt{false}. Таким образом, каждая операция с сервером для данной роли может быть запрещена или разрешена. В дальнейшем в словаре можно хранить еще и JSON-схему, накладывающую произвольные ограничения на параметры запроса;
+\item[] \texttt{applications} --- коллекция заявок на регистрацию. Структура документов по сути идентична документам из коллекции \texttt{users}, за тем исключением, что заявки на регистрацию не содержат поле \texttt{role};
+\item[] \texttt{chatrooms} --- коллекция чат-комнат. Каждый документ содержит историю переписки и массив логинов участников чата;
+\item[] \texttt{editbox} --- коллекция содержания элементов editbox. Документы содержат два поля: код в markdown и поле \texttt{box\_id}, соответствующее id HTML элемента, содержание которого определяется данным документом (id хранятся в base64 \cite{base64})
+\item[] \texttt{events} --- коллекция событий. Документ содержит сохраненные данные из формы создания события, такие как название события, название предмета и типа события и т.д. Также, событие содержит поле \texttt{files}, являющееся словарем, где ключем выступает отображаемое имя прикрепленного файла, а значением --- относительный путь к файлу на сервере. Таким образом по названию прикрепленного файла можно получить прямую ссылку на сам файл. Событие может содержать поле \texttt{chatId}, совпадающее с одним из \texttt{ObjectId} в коллекции \texttt{chatrooms}. Наличие этого поля означает, что к событию прикреплена чат-комната. Наконец, событие может содержать флаг \texttt{finished}, устанавливаемый в том случае, когда событие завершилось;
+\item[] \texttt{eventTypes} --- коллекция доступных типов событий (н: лабораторная работа). Эта коллекция необходима для формирования выпадающего списка \enquote{тип события}. Если при создании списка указан тип \enquote{другой}, то происходит поиск по коллекции \texttt{eventTypes}, и если тип с таким названием не найден, то он добавляется в коллекцию (и становится доступен для выбора при создании последующих событий);
+\item[] \texttt{eventSubjects} --- коллекция доступных предметов при создании события. Полностью идентична коллекции \texttt{eventTypes} по структуре документов;
+\item[] \texttt{news} --- коллекция новостей. Каждая новость содержит заголовок, отображаемое имя автора, дату создания новости, поле \texttt{public} либо \texttt{target}, задающее целевую аудиторию новости и поле \texttt{boxId}, устанавливающее соответствие с документом в коллекции \texttt{editbox}, содержащим тело новости.
+\end{enumerate}
+
+Для ускорения операций над коллекциями MongoDB и обеспечения гарантий уникальности были введены следующие индексы:
+\begin{enumerate}
+\item[-] уникальный индекс по полю \texttt{login} в коллекции \texttt{users};
+\item[-] уникальный индекс по полю \texttt{id} в коллекциях \texttt{eventTypes} и \texttt{eventSubjects};
+\item[-] уникальный индекс по полю \texttt{box\_id} в коллекции \texttt{editbox};
+\item[-] индекс по полю \texttt{group} в коллекции \texttt{users} для быстрой агрегации и поиска пользователей;
+\item[-] индекс по полю \texttt{roles} в коллекции \texttt{users} для быстрой выборки по ролями (н: найти всех преподавателей);
+\item[-] индекс по полям \texttt{public} и \texttt{target} в коллекции \texttt{news} для быстрого поиска новостей.
+\end{enumerate}
+
+
+\subsection{Архитектура сервера}
+Исходный код сервера был классическим образом разделен на четыре части: 
+\begin{enumerate}
+\item файл \texttt{app.js}, содержащий код конфигурации и запуска сервера;
+\item каталог \texttt{routes}, содержащий код, отвечающий за выбор нужного обработчика для запроса и подключение связующего программного обеспечения (англ: middleware). Разделение запросов на требующие и не требующие авторизации было сделано при помощи создании двух роутеров, только к одному из которых было подключено middleware проверки сессии.
+\item каталог \texttt{handlers}, содержащий код обработчиков для запросов, причем обработчики различных классов запросов описаны в отдельных файлах. К примеру, все запросы, относящиеся к работе с пользователями, обрабатываются в файле handlers/users.js. Такие запросы обычно начинаются с некоторого префикса (в случае с пользователями: /users/…). С целью повторного использования кода был также написан файл handlers/common.js, содержащий часто используемые в обработчиках функции, такие как ответ кодом 200, 400, 404 или 500 с опциональной передачей сообщения клиенту.
+\item каталог \texttt{lib}, содержащий код самописных библиотечных функций, будь то функции работы с базами данных или методы валидации сессий и паролей. Для удобства функции работы с Redis и MongoDB были описаны в двух файлах: lib/mongo\_client.js и lib/redis\_cilent.js, производящих инициализацию соответствующих адаптеров (в момент импортирование модуля). Файл lib/mongo\_client.js отличается от lib/redis\_client.js тем, что в первом описаны функции, выполняющие конкретные запросы к MongoDB, в то время как lib/redis\_client.js содержит только обертку для самих методов Redis API. Также был написан файл lib/db.js, предоставляющий абстракцию для работы с данными.
+\end{enumerate}
+
+
+\subsection{Cтраницы}
+Так как было принято решение не использовать фреймворков для написания клиентского JavaScript кода, были реализованы некоторые утилитарные функции, среди которых:
+\begin{enumerate}
+\item[] функция \texttt{get\_cookies()}, составляющая словарь с данным, хранящимися на момент вызова функции в cookie браузера:
+\begin{lstlisting}
+function get_cookies() {
+  let cookies = {}, pairs = document.cookie.split(";")
+  for (let pair of pairs) {
+    pair = pair.split("=")
+    if (pair.length == 2) { cookies[(pair[0] + '').trim()] = unescape(pair[1]) }
+  }
+  return cookies
+}
+\end{lstlisting}
+\begin{center}
+Листинг 1 --- функция извлечения cookie
+\end{center}
+\item[] функции \texttt{css\_get()} и \texttt{css\_set()}, позволяющие получить или изменить указанный набор css свойств объекта:
+\begin{lstlisting}
+function css_set(element, properties) {
+  if (typeof element === 'string') {
+    element = document.getElementById(element)
+  }
+
+  Object.keys(properties).forEach((key) => {
+    element.style[key] = properties[key]
+  })
+}
+
+function css_get(element, property) {
+  if (typeof element === 'string') {
+    element = document.getElementById(element)
+  }
+
+  const style = window.getComputedStyle(element)
+  return style.getPropertyValue(property)
+}
+\end{lstlisting}
+\begin{center}
+Листинг 2 --- функции получения и изменения таблицы стилей
+\end{center}
+\item[] функции \texttt{logged\_in()} и \texttt{logged\_in\_as()}, осуществляющие проверку наличия нужной роли в cookie клиента:
+\begin{lstlisting}
+function _logged_in_as(role) {
+  let ui_view = []
+  if ('UIVIEW' in COOKIES) { ui_view = COOKIES['UIVIEW'].split(',') }
+  else { return false }
+  return ui_view.indexOf(role) != -1
+}
+\end{lstlisting}
+\begin{center}
+Листинг 3 --- функция клиентской проверки авторизации
+\end{center}
+\item [] функция \texttt{get\_dim()}, возвращающая ширину и высоту переданного элемента, что необходимо для замены текстового поля editbox на textarea соответствующего размера:
+\begin{lstlisting}
+function get_dim(element) {
+  const rect = element.getBoundingClientRect()
+  return {'width': Math.round(rect.width), 'height': Math.round(rect.height)}
+}
+\end{lstlisting}
+\begin{center}
+Листинг 4 --- функция получения размеров элемента
+\end{center}
+\item [] функция \texttt{request()}, представляющая обертку для асинхронного AJAX \cite{ajax} запроса и принимающая в качестве параметра функцию-callback:
+\begin{lstlisting}
+function _request(method, url, headers, data, callback, isFile) {
+  if (METHODS.indexOf(method) != -1) {
+    let xhttp = new XMLHttpRequest()
+    xhttp.onreadystatechange = () => {
+      if (xhttp.readyState === 4) 
+        callback(xhttp.status, xhttp.responseText)
+    }
+
+    if (method === 'GET' && data !== null) {
+      let keys = Object.keys(data)
+      url += ('?' + keys[0] + '=' + data[keys[0]])
+      for (let i = 1; i < keys.length; ++i)
+        url += ('&' + keys[i] + '=' + data[keys[i]])
+    }
+
+    xhttp.open(method, SERVER + url, true)
+    if (headers !== null) {
+      Object.keys(headers).forEach((key) =>
+        xhttp.setRequestHeader(key, headers[key]))
+    }
+    if (method == 'GET' || data === null) xhttp.send()
+    else xhttp.send(isFile ? data : JSON.stringify(data))
+  } else {
+    callback(400, 'unknown method: ' + method)
+  }
+}
+\end{lstlisting}
+\begin{center}
+Листинг 5 --- функция-обертка асинхронной отправки запроса
+\end{center}
+\end{enumerate}
+
+Так как значительная часть клиентского JavaScript кода отвечает всего лишь за скрытие и отображение соответствующих элементов, были написаны два простейших css класса \texttt{initially-hidden} и \texttt{initially-disabled}, которые впоследствии добавлялись или удалялись из списка классов объекта.
+
+\subsection{Авторизация}
+Для реализации механизма авторизации была выбрана схема сессионности, лежащая между классической схемой с передачей данных авторизации в каждом запросе и технологией JWT (JSON Web Token \cite{jwt}). Суть метода заключается в следующем: с запросом на авторизацию пользователь передает свой логин и пароль, которые проверяются на сервере. В случае успешной проверки на сервере (в данном случае в Redis) создается сессия. Значение в Redis в данном случае является сокращенным документом из коллекции users, а ключ --- уникальным идентификатором, генерируемым в момент открытия сессии. Этот уникальный идентификатор записывается клиенту в cookie вместе с его ролью, чтобы с обеспечить \enquote{сессионность} с клиентской стороны:
+\begin{lstlisting}
+function login(req, res) {
+  const user = basic_auth(req)
+
+  if (!user) {
+    common.send_bad_request_response(res)
+  }
+
+  db.get_user(user.name, (err, user_db) => {
+    if (err) {
+      common.send_error_response(res, 'could not find user: ' + err.message)
+      return
+    }
+
+    if (!user_db || !security.checkPassword(user.pass, user_db.passwordSalt, user_db.passwordHash)) {
+      common.send_unauthorized_response(res, 'user not found or the password is incorrect')
+      return
+    }
+
+    const session_id = uuid()
+    db.open_session(session_id, user_db, (err) => {
+      if (err) {
+        common.send_error_response(res, 'could not open session: ' + err.message)
+        return
+      }
+
+      res.cookie('SESSIONID', session_id, {httpOnly: true, maxAge: 86400 * 1000})
+      res.cookie('UIVIEW', user_db.roles.join(','), {httpOnly: false, maxAge: 86400 * 1000})
+      common.send_text_response(res, 200)
+    })
+  })
+}
+
+function open_session(session_id, user_data, callback) {
+  let user_copy = JSON.parse(JSON.stringify(user_data))
+  delete user_copy['_id']
+  delete user_copy['passwordHash']
+  delete user_copy['passwordSalt']
+
+  redis_client.set(session_id, JSON.stringify(user_copy), (err) => {
+    if (err) {
+      callback(err)
+    } else {
+      redis_client.expire(session_id, 86400, callback)
+    }
+  })
+}
+\end{lstlisting}
+\begin{center}
+Листинг 6 --- обработка запроса авторизации и открытие сессии
+\end{center}
+Все последующие запросы, произведенные с идентификатором сессии в cookie, позволяют таким образом быстро получить информацию о пользователе, просто считав значение из Redis по ключу. Проверка авторизации упрощается до проверки считанного из Redis значения на null.
+
+Время жизни сессии установлено в 86400 секунд (24 часа) с последнего успешного запроса (то есть сессия автоматически продлевается).
+
+Запрос на завершение сессии, соответственно, удаляет сессию из Redis и очищает cookie для отражения изменений со стороны клиента.
+
+
+\subsection{Ролевая модель}
+Для обеспечения ролевой модели коллекция \texttt{roles} была заполнена документами, отражающими описание каждой из ролей. Для проверки доступности запроса было написано middleware, осуществляющее валидацию всех запросов, требующих валидации:
+\begin{lstlisting}
+function access_check_middleware(req, res, next) {
+  const session_id = req.cookies.SESSIONID
+
+  if (!session_id) {
+    common.send_unauthorized_response(res)
+    return
+  }
+
+  db.get_session(session_id, (err, user_db) => {
+
+    if (err) {
+      common.send_unauthorized_response(res, err.message)
+      return
+    }
+
+    req.user_db = user_db
+    req.session_id = session_id
+
+    validation.check(req, (err) => {
+      if (err) {
+        common.send_forbidden_response(res, err.message)
+      } else {
+        next()
+      }
+    })
+  })
+}
+
+function check(request, callback) {
+  const user = request.user_db
+  const req_uri = request.method + ' ' + new url.URL('http://' + request.headers.host +  request.url).pathname
+
+  db.get_roles(user['roles'], (err, roles) => {
+    if (err) {
+      callback(err)
+      return
+    }
+
+    if (!roles) {
+      callback(new Error('no such roles: ' + user['roles']))
+      return
+    }
+
+    for (let role of roles) {
+      const rule = role['requests']
+      if (req_uri in rule) {
+        if (!rule[req_uri]['available']) {
+          continue
+        } else {
+          callback()
+          return
+        }
+      } else {
+        continue
+      }
+    }
+
+    callback(new Error('prohibited'))
+  })
+}
+\end{lstlisting}
+\begin{center}
+Листинг 7 --- проверка роли в middleware
+\end{center}
+
+\subsection{Сообщения}
+Для обмена мгновенными сообщениями был написан handlers/websocket.js, отвечающий за инициализацию websocket сервера и поддержание инфраструктуры чат-комнаты: сохранение истории переписки и рассылку сообщений участникам. Идентификатор чат-комнаты передается в параметрах url при подключении к websocket серверу. Таким образом, достаточно проверить что подключившийся пользователь авторизован и находится в списке участников данной чат-комнаты.
+
+Установленный протокол поддерживает три типа сообщений:
+\begin{enumerate}
+\item \texttt{SINGLE\_MESSAGE} --- одно сообщение, содержащее присланный текст и логин отправителя;
+\item \texttt{MESSAGE\_HISTORY} --- история переписки. В поле \texttt{history} содержит массив сообщений в формате \texttt{SINGLE\_MESSAGE};
+\item \texttt{ERROR} --- содержит только текст ошибки, без информации об отправителе.
+\end{enumerate}
+
+Так как входящие сообщения пользователей рассматриваются как текстовые, необходимо проводить некоторую \enquote{чистку} во избежание манипуляций с исходным кодом страницы, на которой эти сообщения будут отображаться. Для достижения этой цели была написана функция \texttt{sanitize}, заменяющая все контрольные символы на эскейп-последовательности:
+\begin{lstlisting}
+function sanitize(str) {
+  return (str.replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\//g, '&#x2F;')
+    .replace(/\\/g, '&#x5C;')
+    .replace(/`/g, '&#96;'))
+}
+\end{lstlisting}
+\begin{center}
+Листинг 8 --- очистка текста сообщений от служебных символов
+\end{center}
+
+Для ускорения работы сервиса информация о чат-комнате выгружается в локальный словарь при первом успешном обращении. Отображение логина пользователя в websocket объект также записывается в локальный словарь.
+
+
+\subsection{События}
+Помимо подгрузки доступных типов/предметов при создании события необходимо также получить списки преподавателей и учебных групп. Для получения списка преподавателей достаточно сделать запрос по коллекции \texttt{users} с фильтром по роли. Получение студенческих групп производится при помощи чуть более сложного запроса, использующего оператор \texttt{\$aggregate}:
+\begin{lstlisting}
+function get_user_groups(callback) {
+  do_client_action((client) =>
+    client.collection(usersCollectionName)
+    .aggregate([{'$match': {'group': {'$exists': true}}},
+    {'$group': {'_id': '$group', 'count': {'$sum': 1}}}]).toArray(callback), callback)
+}
+
+\end{lstlisting}
+\begin{center}
+Листинг 9 --- получение групп студентов
+\end{center}
+
+В свою очередь, добавление участников в событие добавляет на самом деле не самих пользователей, а \enquote{правила}, которые при отправке события на сервер преобразуются в реальный список пользователей при помощи функции \texttt{unwind\_rules}:
+\begin{lstlisting}
+function unwind_rules(rules, callback) {
+  let match_query = {'$or': []}
+  rules.forEach((rule) => {
+    match_query['$or'].push(rule)
+  })
+
+  do_client_action((client) =>
+    client.collection(usersCollectionName)
+    .find(match_query)
+    .project({'_id': 0, 'login': 1, 'first_name': 1, 'last_name': 1, 'roles': 1})
+    .toArray(callback), callback)
+}
+\end{lstlisting}
+\begin{center}
+Листинг 10 --- развертка праавил для получения списка участников
+\end{center}
+
+Наконец, для упрощения операции получения событий, в которых участвует конкретный пользователь, при создании события оно дописывается в документы всех соответствующих пользователей. При удалении же события, записи удаляются и из документов, соответствующих участникам.
+
+\newpage
+\section{Тестирование}
+Тестирование работоспособности производилось вручную: проверками всех сценариев работы сайтом и сравнением реального поведения с ожидаемым. Проверенные сценарии представлены в виде таблицы:
+
+\begin{center}
+\begin{tabular}{| p{5cm} | p{5cm} | p{5cm} |}
+\hline
+Описание сценария & Ожидаемое поведение & Реальное поведение\\
+\hline
+Проход по статическим ссылкам, доступным для неавторизированного пользователя &
+Браузер переходит на соответствующую страницу &
+Соответствует ожиданиям\\
+\hline
+Переход по ссылке новости, будучи авторизованным как студент или преподаватель &
+В ленте новостей видны публичные новости и новости для группы (преподавателей) &
+Соответствует ожиданиям\\
+\hline
+Переход по ссылке новости, будучи авторизованным как редактор или администратор &
+Помимо новостной ленты видна форма публикации новости &
+Соответствует ожиданиям\\
+\hline
+Заполнение формы и отправка новости &
+Страница перезагружается, новость появляется во всех соответствующих в лентах &
+Соответствует ожиданиям\\
+\end{tabular}
+
+\begin{tabular}{| p{5cm} | p{5cm} | p{5cm} |}
+Нажатие на элемент editbox, будучи авторизованным за редактора или администратора &
+Появляется интерфейс редактирования, состоящий из двух кнопок &
+Соответствует ожиданиям\\
+\hline
+Нажатие на кнопку с пиктограммой карандашика &
+После загрузки текст editbox заменяется на textarea с исходными кодами в markdown &
+Соответствует ожиданиям\\
+\hline
+Нажатие на пиктограмму с глазиком &
+Исходные коды в markdown заменяются на размеченный и стилизованный текст в HTML &
+Соответствует ожиданиям\\
+\hline
+Нажатие на пиктограмму с дискетой &
+Страница перезагружается, изменения элемента editbox сохраняются &
+Соответствует ожиданиям\\
+\hline
+Нажатие на кнопку \enquote{ВХОД} после ввода верного логина и пароля &
+Страница сайта изменяется в соответствии с ролью, надпись \enquote{Войти} меняется на \enquote{Выйти} &
+Соответствует ожиданиям\\
+\hline
+Нажатие на кнопку \enquote{ВХОД} после ввода \emph{неверного} логина и пароля &
+Под формой авторизации появляется красный текст \enquote{Неверный логин и/или пароль} &
+Соответствует ожиданиям\\
+\end{tabular}
+
+\begin{tabular}{| p{5cm} | p{5cm} | p{5cm} |}
+Нажатие на кнопку \enquote{Выйти} &
+Страница возвращается к виду, доступному для неавторизованного пользователя, надпись \enquote{Выйти} меняется на \enquote{Войти} &
+Соответствует ожиданиям\\
+\hline
+Нажатие на кнопку \enquote{Создать} в элементе создания нового события &
+Страница перезагружатся. В случае если были указаны нестандартные тип или предмет, они добавляются в соответствующие выпадающие списки &
+Соответствует ожиданиям\\
+\hline
+Нажатие на кнопку \enquote{Принять} или \enquote{Отклонить} на странице управления &
+В случае успешного добавления/удаления пользователя заявка исчезает из списка. В противном случае выводится сообщение об ошибке &
+Соответствует ожиданиям\\
+\hline
+Нажатие на кнопку \enquote{Добавить} после заполнения формы создания нового пользователя на странице управления &
+Страница перезагружается, данные нового пользователя позволяют войти на сайт &
+Соответствует ожиданиям\\
+\end{tabular}
+
+\begin{tabular}{| p{5cm} | p{5cm} | p{5cm} |}
+Отправление сообщения в чат, в котором состоит данный пользователь &
+Сообщения появляется в истории переписки всех пользователей данной чат-комнаты &
+Соответствует ожиданиям\\
+\hline
+Нажатие на кнопку \enquote{Оставить заявку} на странице регистрации &
+Пользователь перенаправляется на главную страницу, заявка на регистрацию появляется на странице управления &
+Соответствует ожиданиям\\
+\hline  
+\end{tabular}\\
+\medskip
+Таблица 1 --- ожидаемое и реальное поведение сайта
+\end{center}
+
+\newpage
+\section*{Заключение}
+\addcontentsline{toc}{section}{Заключение}
+В ходе выполнения курсовой работы были проанализированы информация и её оформление на существующем сайте кафедры ИУ-9 и создан новый, многофункциональный сайт, предоставляющий информацию о кафедре. Был разработан новый единый стиль, в рамках которого были оформлены старые и новые страницы сайта.
+
+На основании поставленных требований был разработан новый функционал, включающий в себя систему авторизации и регистрации, ролевую модель доступа, систему обмена мгновенными сообщениями, публикацию и получение новостей. Разработан встраиваемый модуль, допускающий редактирование страниц сайта в markdown, предпросмотр и сохранение изменений. Также была сформулирована и реализована модель \enquote{событий}, позволяющая создать и провести кафедральное событие произвольного характера.
+
+Разработанный функционал был реализован с использованием технологии Node JS и СУБД MongoDB и Redis. Клиентская часть исходного кода была написана без использования фреймворков, таким образом уменьшив объем скачиваемых данных на странице в среднем до 250КБайт.
+
+Полученная реализация была протестирована при помощи ручной проверки всех сценариев, найденные неточности поведения исправлены.
+
+Дальнейшее развитие проекта можно направить на развитие ролевой модели, добавление возможности изменения событий после их создания, использование механизма обмена мгновенными сообщениями для создания чата вида \enquote{вопрос-ответ}.
+
+
+
+\newpage
+\addcontentsline{toc}{section}{Список литературы}
+\begin{thebibliography}{9} % Источники
+\bibitem{iu9-old}
+\textit{Главная страница} //
+Кафедра ИУ-9 Теоретическая информатика и компьютерные технологии --- 2018 --- Режим доступа: http://iu9.bmstu.ru/ (дата обращения 17.10.2018)
+
+
+\bibitem{iu9-yandex}
+\textit{Поисковый запрос \enquote{кафедра иу9}} //
+Яндекс --- 2018 --- Режим доступа: https://yandex.ru/search/?text=кафедра\%20иу9\&lr=213 (дата обращения 17.10.2018)
+
+\bibitem{iu9-google}
+\textit{Поисковый запрос \enquote{кафедра иу9}} //
+Google --- 2018 --- Режим доступа: https://www.google.ru/search?q=кафедра+иу9 (дата обращения 17.10.2018)
+
+\bibitem{iu9-mail}
+\textit{Поисковый запрос \enquote{кафедра иу9}} //
+Мэйл.РУ  --- 2018 --- Режим доступа: https://go.mail.ru/search?q=кафедра+иу9 (дата обращения 17.10.2018)
+
+\bibitem{iu9-rambler}
+\textit{Поисковый запрос \enquote{кафедра иу9}} //
+Рамбер  --- 2018 --- Режим доступа: https://nova.rambler.ru/search?query=кафедра\%20иу9 (дата обращения 17.10.2018)
+
+\bibitem{iu9-superold}
+\textit{Запрос \enquote{http://iu9.bmstu.ru}} //
+Wayback Machine --- 2018 --- Режим доступа: https://web.archive.org/web/*/http://iu9.bmstu.ru (дата обращения 17.10.2018)
+
+\bibitem{http-cookie}
+\textit{HTTP cookie} //
+Wikipedia - The Free Encyclopedia --- 2018 --- Режим доступа: https://en.wikipedia.org/wiki/HTTP\_cookie (дата обращения 17.10.2018)
+
+\bibitem{curl}
+\textit{Documentation Overview} //
+curl - command line tool and library for transferring data with URLs --- 2018 --- Режим доступа: https://curl.haxx.se/docs/ (дата обращения 17.10.2018)
+
+\bibitem{markdown}
+\textit{Markdown} //
+Wikipedia - The Free Encyclopedia --- 2018 --- Режим доступа: https://en.wikipedia.org/wiki/Markdown (дата обращения 17.10.2018)
+
+\bibitem{rbac}
+\textit{Role-based access control} //
+Wikipedia - The Free Encyclopedia --- 2018 --- Режим доступа: https://en.wikipedia.org/wiki/Role-based\_access\_control (дата обращения 17.10.2018)
+
+\bibitem{showdown}
+\textit{A Markdown to HTML converter written in Javascript!} //
+Showdown --- 2018  --- Режим доступа: http://showdownjs.com/ (дата обращения 17.10.2018)
+
+\bibitem{node-js}
+\textit{JavaScript runtime built on Chrome's V8 JavaScript engine.} //
+Node.js --- 2018  --- Режим доступа: https://nodejs.org/en/ (дата обращения 17.10.2018)
+
+\bibitem{npm}
+\textit{Package manager for JavaScript} //
+npm ---  2018  --- Режим доступа:https://www.npmjs.com/ (дата обращения 17.10.2018)
+
+\bibitem{Redis}
+\textit{Open source (BSD licensed), in-memory data structure store} //
+Redis.io --- 2018 --- Режим доступа: https://redis.io/ (дата обращения 17.10.2018)
+
+\bibitem{bson}
+\textit{Short for Bin­ary JSON} //
+BSON --- 2018 --- Режим доступа: http://bsonspec.org/ (дата обращения 17.10.2018)
+
+\bibitem{base64}
+\textit{Base64} //
+Wikipedia - The Free Encyclopedia --- 2018 --- Режим доступа: https://en.wikipedia.org/wiki/Base64 (дата обращения 17.10.2018)
+
+\bibitem{ajax}
+\textit{Ajax (programming)} //
+Wikipedia - The Free Encyclopedia --- 2018 --- Режим доступа: https://en.wikipedia.org/wiki/Ajax\_(programming) (дата обращения 17.10.2018)
+
+\bibitem{jwt}
+\textit{JSON Web Token} //
+Wikipedia - The Free Encyclopedia --- 2018 --- Режим доступа: https://en.wikipedia.org/wiki/JSON\_Web\_Token (дата обращения 17.10.2018)
+
+\end{thebibliography}
+
+\end{document}
