@@ -1,0 +1,894 @@
+\documentclass[14pt]{extarticle}
+
+\RequirePackage[l2tabu, orthodox]{nag}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=1cm]{geometry}
+\usepackage{amsmath, amssymb, titletoc, titlesec, csquotes, tabularx, fontspec, indentfirst, listings, color, url}
+
+\setmainfont{Times New Roman}
+\linespread{1.5}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{myblue}{rgb}{0.2,0,0.9}
+
+\lstset{ %
+  backgroundcolor=\color{white},    % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize\ttfamily,% the size of the fonts that are used for the code
+  breakatwhitespace=false,          % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                  % sets automatic line breaking
+  captionpos=b,                     % sets the caption-position to bottom
+  commentstyle=\color{mygreen},     % comment style
+  deletekeywords={...},             % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},           % if you want to add LaTeX within your code
+  extendedchars=true,               % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,	                    % adds a frame around the code
+  keepspaces=true,                  % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{myblue},      % keyword style
+  language=C,                     % the language of the code
+  morekeywords={uniform, out, layout, in, vec3, version},
+  numbers=left,                     % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=8pt,                    % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray},  % the style that is used for the line-numbers
+  rulecolor=\color{black},          % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                 % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,           % underline spaces within strings only
+  showtabs=false,                   % show tabs within strings adding particular underscores
+  stepnumber=1,                     % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},      % string literal style
+  tabsize=2,	                    % sets default tabsize to 2 spaces
+  title=\lstname,                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+  belowskip=-2.0 \baselineskip,
+  aboveskip=1.0 \baselineskip
+}
+
+\begin{document}
+
+\begin{center}
+Министерство образования и науки Российской Федерации Федеральное государственное бюджетное образовательное учреждение высшего профессионального образования\\ \bigskip \textbf{\enquote{Московский государственный технический университет имени Н.Э. Баумана} \\ \smallskip (МГТУ им. Н. Э. Баумана)}
+\end{center}
+\noindent\rule{\textwidth}{1pt}
+ФАКУЛЬТЕТ \enquote{Информатика и системы управления} \smallskip\\
+КАФЕДРА \enquote{Теоретическая информатика и компьютерные технологии}\\
+\begin{center}
+\Large{\textbf{РАСЧЕТНО-ПОЯСНИТЕЛЬНАЯ ЗАПИСКА К КУРСОВОМУ ПРОЕКТУ НА ТЕМУ: \bigskip\bigskip\\
+\textit{\enquote{Библиотека для написания оптимизирующих преобразований для формата SPIR-V}}}}
+\vfill
+\end{center}
+\vfill
+\begin{tabularx}{\textwidth}{X c r}
+Студент ИУ9-72 & $\underset{\text{(Подпись, дата)}}{\makebox[2.0in]{\hrulefill}}$ & И.О. Фамилия\\
+& & \\
+Руководитель курсового проекта  & $\underset{\text{(Подпись, дата)}}{\makebox[2.0in]{\hrulefill}}$ & И.О. Фамилия\
+\end{tabularx}
+\begin{center}
+Москва, 2019 г.
+\end{center}
+
+\thispagestyle{empty}
+
+\newpage
+\tableofcontents
+
+\newpage
+\section*{Введение}
+\addcontentsline{toc}{section}{Введение}
+На сегодняшний день в области графического программирования существует множество конкурирующих программных интерфейсов:  \texttt{DirectX}, \texttt{OpenGL}, \texttt{Metal}, \texttt{Mantle}, предоставляющих не только различные наборы функций для обращения к драйверу графического ускорителя, но и использующих собственные языки шейдеров и промежуточные представления скомпилированных шейдеров. Так, только перечисленные спецификакции используют языки \texttt{GLSL}, \texttt{HLSL}, \texttt{C++} и \texttt{AMD IL}. Более того, некоторые языки (например, \texttt{GLSL}) обязывают каждого поставщика драйвера реализовывать собственный компилятор.
+
+Графический интерфейс \texttt{Vulkan} изначально создавался Khronos Group как \enquote{новое поколение \texttt{OpenGL}}, однако позже был переименован \cite{vlk19}. Цели \texttt{Vulkan} включали, но не ограничивались:
+\begin{enumerate}
+	\item уменьшением накладных расходов (англ: overhead);
+	\item поддежкой графических вызовов, совершаемых с нескольких потоков;
+	\item снижением нагрузки на центральный процессор.
+\end{enumerate}
+
+Однако еще одной ключевой особенностью \texttt{Vulkan} является использование промежеточного двоичного формата шейдеров \texttt{SPIR-V}, в который компилируются все популярные языки шейдеров высокого уровня.
+
+Целью настоящей курсовой работы является разработка кроссплатформенной библиотеки для написания оптимизирующих преобразований для подмножества формата \texttt{SPIR-V}. Задачи, таким образом, включают: изучение формата \texttt{SPIR-V}, разработку промежуточного представления бинарного формата в программе, проработку и реализацию интерфейса взаимодействия с библиотекой, а также тестирование и валидацию результатов.
+
+
+\newpage
+\section{Предметная область}
+\subsection{Формат SPIR-V}
+\texttt{SPIR-V} --- это простой двоичный промежуточный язык для графических шейдеров и вычислительных ядер. Модуль \texttt{SPIR-V} содержит несколько точек входа, которые при этом могут вызывать общие функции. Каждая функция содержит граф потока управления, состоящий из базовых блоков, которые в том числе содержаат инструкции для описания структурированного потока управления. 
+
+Инструкции чтения и записи используются для доступа к объявленным переменным, в том числе параметрам и возвращаемым значениям. Для хранения промежуточных результатов используется SSA форма \cite{ssa98}. Объекты данных представляются логически, с использованием иерархии типов. Выбираемые модели адресации устанавливают, могут ли использоваться операции с указателями или доступ к памяти является чисто логическим.
+
+Модуль \texttt{SPIR-V} представляется линейной последовательностью четырехбайтовых слов. Первые пять слов содержат заголовок модуля \cite{spv19}.
+
+\begin{table}[h]
+    \centering
+    \caption{формат заголовка \texttt{SPIR-V} модуля}
+    \begin{tabular}{| c | l |}
+        \hline
+        Номер слова & Содержание\\
+        \hline
+        0 & Магическое число\\
+        \hline
+        1 & Номер версии спецификации \texttt{SPIR-V}\\
+        \hline
+        2 & Магическое число генератора. Используется для\\ & идентификации компилятора \texttt{SPIR-V}\\
+        \hline
+        3 & Верхняя граница --- число, гарантирующее, что все \\ & идентификаторы в этом модуле меньше этого числа \\
+        \hline
+        4 & Нулевой байт\\
+        \hline
+    \end{tabular}
+    \label{tab:spirv_header}
+\end{table}
+
+Все остальные слова составляют линейную последовательность инструкций в определенном порядке:
+\begin{enumerate}
+	\item все инструкции \texttt{OpCapability};
+
+    \item опциональные инструкции \texttt{OpExtension};
+
+    \item опциональные инструкции \texttt{OpExtInstImport};
+
+    \item одна обязательная интструкция \texttt{OpMemoryModel};
+
+    \item все объявления точек входа \texttt{OpEntryPoint};
+    
+    \item все объявления режимов выполнения \texttt{OpExecutionMode} или \texttt{OpExecutionModeId};
+    
+    \item отладочные инструкции \texttt{OpString}, \texttt{OpSourceExtension}, \texttt{OpSource},\\
+    \texttt{OpSourceContinued}, \texttt{OpName} и др.;
+    
+    \item инструкции аннотаций (декорирущие инструкции \texttt{OpDecorate},\\
+    \texttt{OpMemberDecorate} и др.);
+    
+    \item все объявления типов \texttt{OpTypeXXX}, объявления констант \texttt{OpConstantXXX}, объявления глобальных переменных \texttt{OpVariable} с классом хранения \emph{не} \texttt{OpFunction});
+    
+    \item все прототипы функций: \texttt{OpFunction}, параметры  \texttt{OpFunctionParameter} окончания функций \texttt{OpFunctionEnd};
+    
+    \item все функции: \texttt{OpFunction}, параметры, все базовые блоки функции,\\
+    \texttt{OpFunctionEnd}.
+\end{enumerate}
+
+Тело функции, в свою очередь, должно удовлетворять правилам:
+\begin{enumerate}
+	\item базовый блок всегда начинается с инструкции \texttt{OpLabel};
+	
+	\item базовый блок всегда заканчивается терминирующей инструкцией (инструкция ветвления \texttt{OpBranch} или \texttt{OpBrandConditional}, инструкция \texttt{OpReturn} или\\
+	\texttt{OpReturnValue}, либо специальные инструкции для завершения базового блока);
+	
+	\item все переменные, объявленные в функции должны иметь класс хранения	\texttt{Function} в инструкции \texttt{OpVariable}, а сами инструкции располагаться до всех остальных инструкций функции. Таким образом, все переменные внутри функции являются глобальными.
+\end{enumerate}
+
+Многие инструкции содержат в одном из операндов \texttt{result<id>} --- уникальный идентификатор, позволяющий другим инструкциям использовать результат выполнения данной инструкции. Модуль \texttt{SPIR-V} всегда находится в SSA форме в том смысле, что любой \texttt{result<id>} всегда пораждается ровно одной инструкцией.
+
+\subsection{SSA форма}
+SSA формой промежуточного представления называется состояние, в котором каждой переменной значение присваивается лишь единожды. При построении SSA формы переменным обычно присваиваются версии, так что присвоение значения переменной превращается в объявление новой версии данной переменной.
+\begin{lstlisting}[caption={пример построения простейшей SSA формы}, captionpos=b]
+y = 0 --> y_1 = 0;
+y = 1 --> y_2 = 1;
+x = y --> x = y_2;
+\end{lstlisting}
+
+~\\ % I don't have time to deal with this :-) @lstime
+
+В случае, если присваивание переменной происходит в двух разных потоках управления, вводят так называемую \enquote{фи-функцию}, выбирающую нужное значение переменной в зависимости от того, из какого базового блока пришел поток управления:
+\begin{lstlisting}[caption={фи-функция SSA формы}]
+x_1 = 0;
+if (...) {
+    x_2 = 1;
+}
+y = phi(x_1, x_2);
+\end{lstlisting}
+
+~\\ % ctrl+f @lstime
+
+SSA форма широко используется при разработке оптимизирующих комплиляторов, так как промежуточное представаление в SSA форме всегда имеет цепь \enquote{определение-использование} (DU-цепь, англ: definition-use) из одного элемента, что значительно упрощает многие алгоритмы. Среди компиляторов, использующих SSA форму в своем промежуточном представлении: \texttt{LLVM}, \texttt{GCC}, \texttt{GoLang}, \texttt{V8}, \texttt{PyPy} и многие другие.
+
+
+\newpage
+\section{Разработка алгоритма}
+Ключевыми, с точки зрения разработки библиотеки, явлются два вопроса:
+\begin{enumerate}
+	\item вопрос выбора промежуточного представления, так как именно над ним (а не над бинарным файлом) проивзодятся оптимизации;
+	\item вопрос определения набора функций (интерфейса), доступных для пользователя библиотеки.
+\end{enumerate}
+
+\subsection{Промежуточное представление}
+В настоещей курсовой работе промежуточное представление разделено на следующие структурные элементы:
+\begin{enumerate}
+	\item заголовок --- информация о программе в целом;
+	\item набор базовых блоков, содержащих инструкции;
+	\item граф потока управления --- информация об условных и безусловных переходах между блоками, а также мета-информация о графе;
+	\item список инструкций, расположенных до графа потока управления;
+	\item список инструкций, расположенных после графа потока управления.
+\end{enumerate}
+
+\subsubsection{Заголовок}
+Заголовок \texttt{SPIR-V} файла в выбранном представлении точно соответствует бинарному представлению в таблице \ref{tab:spirv_header}. Заголовок сохраняется и его содержимое (за исключением верхней границы) никак не используется, однако, за счет проверки порядка байт в магическом числе, появлятся возможность определния порядка байт на платформе, на которой запускался комплилятор. Также теоретически реализуем промежуточный слой, обеспечивающий совместимость с более старыми форматами, версию которых также можно прочитать из заголовка.
+
+\subsubsection{Инструкции}
+Каждый базовый блок содержит упорядоченный список инструкций, лежащих внутри этого базового блока.
+
+Формат инструкций близок к их бинарному представлению, однако преобразован для более простой работы с операндами. Инструкция содержит идентифицирующий её код (так называемый \emph{опкод}), а также словарь всех операндов, доступных как на чтение, так и на запись.
+
+Так как полная спецификация \texttt{SPIR-V} содержит более трех сотен инструкций, в настоящей курсовой работе поддерживается лишь подмножество всех инструкций. Однако предусмотрена возможность расширения этого множетсва как разработчиком, поддерживающим библиотеку, так и конечным пользователем.
+
+\subsubsection{Базовые блоки}
+Базовый блок является упорядоченным набором инструкций, однако для автоматизации процесса изменения графа потока управления из всех базовых блоков во внутреннем представлении удаляются инструкции объявления базового блока и инструкции условного и безусловного ветвления. Эти инструкции добавляются обратно, когда пользователь вызывает процедуру сериализации. 
+
+Так как на данный момент не поддерживается инструкция ветвления \texttt{OpSwitch}, из любого базового блока возможнен либо безусловный переход, либо условный, либо никакого. По этой причине условие представляется необязательным атрибутом базового блока.
+
+\subsubsection{Граф потока управления}
+Граф потока управления --- множество всех возможных путей исполнения программы, представленное в виде графa с отмеченной \emph{точкой входа} \cite{cfg70}. Вершинами графа являются базовые блоки, ребра же обозначают условные и безусловные переходы между блоками.
+
+Одной из гибких с точки зрения операций над графом структур представления является список инцидентности, который и используется в данной курсовой работе.
+
+
+\subsubsection{Дерево доминаторов}
+Помимо стандартной для графа информации, предметная область оптимизирующих преобразований часто требует данных о доминировании вершин друг над другом. По этой причине в качестве дополнительных данных в представление графа добавлено дерево доминаторов, в котором каждой вершине соответствует ее непосредственный доминатор.
+
+\subsection{Интерфейс библиотеки}
+\subsubsection{Функции манипуляции промежуточным представлением}
+При изучении описаний алгоритмов на псевдокоде были выделены и зафиксированы операции, необходимые для реализации этих алгоритмов, а именно:
+\begin{enumerate}
+	\item конструирование внутреннего представления из потока байт, причем чтение бинарного файла с диска производится пользователем самостоятельно;
+	\item обратное преобразование внутреннего представления в поток байт (сериализация). По схожей логике, пользователю предоставляется лишь сам поток байт, запись же содержимого в файл производится пользователем самостоятельно, с использованием адекватных в конкретной ситуации средств;
+	\item удаление инструкции из базового блока --- необходимо для реализации оптимизаций, передвигающих или удаляющих инструкции (к примеру, свертка констант);
+	\item вставка инструкции в конец или начало базового блока. Вставка инструкций необходима, например, для реализации подъема инвариантного кода из циклов;
+	\item создание нового базового блока. Также необходимо для подъема инвариантного кода, так как вставляется т.н. \enquote{пред-заголовок}, который является новым базовым блоком, предшествующим заголовку цикла;
+	\item преобразование внутреннего представления в SSA форму. Ценность SSA формы для оптимизирующий преобрзований сложно переоценить: тривиализируется операция поиска достигающего определения, упрощается поиск мертвых выражений, распространение констант и многие другие \cite{mun97}.
+\end{enumerate}
+
+
+\subsubsection{Функции манипуляции графом потока управления}
+В отличие от манипуляций с внутренним представлением, манипуляции с графом потока управления практически не связаны с предметной областью оптимизаций, а лишь представляют набор операций, достаточных для преобразований графа. Таковыми являются:
+\begin{enumerate}
+	\item добавление ребра между двумя вершинами;
+	\item удаление ребра из одной вершины в другую;
+	\item перенаправление ребра --- операция, соединяющая удаление и добавление ребра, добавленная для удобства;
+	\item удаление вершины из графа (вершина удаляется вместе со всеми входящими и исходящими ребрами).
+\end{enumerate}
+
+Помимо перечисленных операций, были также реализованы общие алгоритмы теории графов, результаты работы которых оказываются необходимы при написании оптимизаций:
+\begin{enumerate}
+	\item обход в глубину, возвращающий предпорядок, постпорядок и дерево обхода;
+    \item обход в ширину, возвращающий порядок обхода;
+    \item ограниченный обход в ширину, позволяющий задать начальную вершину и \enquote{терминальную вершину}, в которую выходить запрещено;
+    \item расчет дерева доминаторов;
+    \item функция, возвращающая для вершины ее порядковый номер в списке детей ее родителя.
+\end{enumerate}
+
+\newpage
+\section{Реализация}
+Библиотека была реализована на языке \texttt{C} (с использованием стандарта \texttt{C99}), так как кроссплатформенность требуется постановкой задачи. Использование минимально возможного набора системных библиотек позволило в конечной реализации добиться компиляции кода без каких-либо изменений как \texttt{gcc} так и \texttt{cl}.
+
+\subsection{Инструкции}
+Все поддерживаемые типы инструкций представлены как перечисление (англ: enum), с тем упростить процесс расширения набора обрабатываемых инструкций.
+\begin{lstlisting}[caption={перечисление поддерживаемых типов инструкций}]
+enum opcode_t {
+    OpVariable = 59,
+    OpLoad = 61,
+    OpStore = 62,
+    ...
+}
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Для каждого элемента перечисления объявлена структура, которая содержит именованные операнды в соответствущих полях.
+\begin{lstlisting}[caption={пример структуры операндов инструкции}]
+struct opvariable_t {
+    u32 result_type;
+    u32 result_id;
+    u32 storage_class;
+    u32 initializer; // optional
+};
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Все унарные и бинарные арифметические инструкции объединены в структуры \texttt{unary\_arithmetics\_layout} и \texttt{binary\_arithmetics\_layout}.
+\begin{lstlisting}[caption={структуры арифметических инструкций}]
+struct unary_arithmetics_layout {
+    u32 result_type;
+    u32 result_id;
+    u32 operand;
+};
+
+struct binary_arithmetics_layout {
+    u32 result_type;
+    u32 result_id;
+    u32 operand_1;
+    u32 operand_2;
+};
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Итоговая структура инструкции использует объединение (англ: union) для создания псевдо-полиморфизма, а также содержит указатель \texttt{unparsed\_words} на массив слов для хранения инструкций, которые не поддерживаются в текущей версии библиотеки.
+\begin{lstlisting}[caption={обобщенная стуктура инструкции}]
+struct instruction_t {
+    enum opcode_t opcode;
+    u32 wordcount;
+    u32 *unparsed_words;
+    union {
+        struct opvariable_t OpVariable;
+        ...
+        struct unary_arithmetics_layout unary_arithmetics;
+        struct binary_arithmetics_layout binary_arithmetics;
+    }
+};
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Таким образом, функции для работы с инструкциями могут обрабатывать все поддерживаемые типы инструкций при помощи, к примеру, оператора \texttt{switch}.
+
+В случае, если пользователь или разработчик библиотеки захочет расширить множество поддерживаемых инструкций, выбранный способ реализации упрощает процедуру до следующих шагов:
+\begin{enumerate}
+	\item добавление соотствествующего значение в перечисление \texttt{opcode\_t};
+	
+	\item объявления соответствующей структуры с необходимым операндами;
+	
+	\item обработки нового значения перечисления в функциях \texttt{instruction\_parse} и\\
+	\texttt{instruction\_dump}, обеспечив, таким образом, доступность инструкции во внутреннем представлении;
+	
+	\item обработки нового значения перечисления в остальных функциях, подразумевающих различное поведение для различных типов инструкций.
+\end{enumerate}
+
+Так как наименьшей единицей данных в формате \texttt{SPIR-V} является четырхбайтовое слово, функция \texttt{instruction\_parse} получает на вход указатель на первое слово инструкции, которую необходимо прочитать.
+\begin{lstlisting}[caption={прототип функции разбора инструкции}]
+static struct instruction_t
+instruction_parse(u32 *word);
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Далее, необходимо заполнить данные инструкции, не зависящие от её типа. В соответствии со спецификацией первое слово инструкции содержит ее тип (опкод) и количество слов, которые занимает инструкция (с учетом первого слова).
+\begin{lstlisting}[caption={разбор общей части инструкции}]
+static const u32 WORDCOUNT_MASK     = 0xFFFF0000;
+static const u32 OPCODE_MASK        = 0x0000FFFF;
+...
+struct instruction_t instruction;
+instruction.opcode = *word & OPCODE_MASK;
+instruction.wordcount = (*word & WORDCOUNT_MASK) >> 16;
+instruction.unparsed_words = memdup(word, instruction.wordcount * 4);
+
+// NOTE: move the pointer to the first word of the first instruction
+++word;
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+После сдвига указателя на следующее слово начинается разбор инструкции, зависящий от её типа. Так как большинство аргументов состоят из одного слова, разбор инструкции упрощается до сдвига и разыменования указателя. К примеру разбор инструкции типа \texttt{opvariable\_t}, включающий обработку необязательного аргумента, выглядит следующим образом:
+\begin{lstlisting}[caption={пример разбора вариативной части инструкции}]
+case OpVariable: {
+    instruction.OpVariable.result_type = *(word++);
+    instruction.OpVariable.result_id = *(word++);
+    instruction.OpVariable.storage_class = *(word++);
+    if (instruction.wordcount == 5) {
+        instruction.OpVariable.result_type = *(word++);
+    }
+} break;
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Функция \texttt{instruction\_dump} работает практически точно наоборот по сравнению с функцией \texttt{instruction\_parse}, однако имеет одно важное отличие: формат бинарного файла строго фиксирован спецификацией \texttt{SPIR-V}, поэтому при расширении набора поддерживаемых инструкций необходимо строго соблюдать этот формат.
+
+Аргументом функции является инструкция и указатель на массив слов, который используется без очистки.
+\begin{lstlisting}[caption={прототип функции сериализации инструкции}]
+static u32 *
+instruction_dump(struct instruction_t *inst, u32 *buffer);
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+В первый элемент буфера записываются код инструкции и количество слов, скомбинированные при помощи бинарного сдвига:
+\begin{lstlisting}[caption={сериализация общей части инструкции}]
+buffer[0] = inst->opcode | (inst->wordcount << 16);
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Далее, в зависимости от типа инструкции, остальные \texttt{inst->wordcount – 1} слов буфера заполняются операндами в порядке, фиксированном спецификацией \texttt{SPIR-V}. Пример для инструкции типа \texttt{opvariable\_t}:
+\begin{lstlisting}[caption={пример сериализации вариативной части инструкции}]
+case OpVariable: {
+    buffer[1] = inst->OpVariable.result_type;
+    buffer[2] = inst->OpVariable.result_id;
+    buffer[3] = inst->OpVariable.storage_class;
+    if (inst->wordcount == 5) {
+        buffer[4] = inst->OpVariable.result_type;
+    }
+} break;
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+\subsection{Конструирование промежуточного представления}
+Функция разбора бинарного файла \texttt{eat\_ir} принимает массив слов, а возвращает промежуточное представление, заданное структурой ir.
+\begin{lstlisting}[caption={структура промежуточного представления}]
+struct ir {
+    struct ir_header header;
+    struct ir_cfg cfg;
+    struct basic_block *blocks;
+    struct instruction_list *pre_cfg;
+    struct instruction_list *post_cfg;
+};
+
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Заголовок считывается из входящих слов с помощью разыменования указателя на структуру (стоит заметить, что структура \texttt{ir\_header} имеет поля, расположенные в строгом порядке, и выровнена по 4-х байтовым границам).
+\begin{lstlisting}[caption={функция конструирования промежуточного представления}]
+struct ir
+ir_eat(u32 *data, u32 size)
+{
+    struct ir file;
+    file.header = *((struct ir_header *) data);
+    ...
+}
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Дальнейший разбор файла разделен на следующие этапы:
+\begin{enumerate}
+	\item разбор всех инструкций и подсчет базовых блоков;
+	\item отделение инструкций, лежащих до первого базового блока;
+	\item заполнение графа потока управления;
+	\item отделение инструкций, лежащих после последнего базового блока.
+\end{enumerate}
+
+Так как списки инструкций представляются в виде двунаправленного списка (для упрощения реализации операций вставки и удаления инструкций), все инструкции заворачиваются в структуру \texttt{instruction\_list}.
+\begin{lstlisting}[caption={элемент двунаправленного списка инструкций}]
+struct instruction_list {
+    struct instruction_t data;
+    struct instruction_list *next;
+    struct instruction_list *prev;
+};
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Таким образом, разбор потока инструкций начинается со свдига указателя на размер заголовка, после чего все остальные инструкции разбираются в цикле вызовом функции \texttt{instruction\_parse} и присоединяются к концу растущего двунаправленного списка инструкций.
+\begin{lstlisting}[caption={составление полного списка инструкций}]
+...
+u32 *word = data + offset;
+    
+// NOTE: get all instructions in a list, count basic blocks
+do {
+    inst = malloc(sizeof(struct instruction_list));
+    inst->data = instruction_parse(word);
+    inst->prev = last;
+
+    if (inst->data.opcode == OpLabel) {
+        labels[bb_count++] = inst->data.OpLabel.result_id;
+    }
+
+    offset += inst->data.wordcount;
+  
+    if (last) {
+        last->next = inst;
+    } else {
+        all_instructions = inst;
+    }
+
+    last = inst;
+    word = data + offset;
+} while (offset != size);
+    
+last->next = NULL;
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Затем, находится первая инструкция первого базового блока, и на этом месте список разрывается. Первую из получившихся частей содержит все инструкции, расположенные до базовых блоков.
+\begin{lstlisting}[caption={отделение инструкций, расположенных до базовых блоков}]
+// NOTE: all pre-cfg instructions
+file.pre_cfg = all_instructions;
+inst = all_instructions;
+do {
+    inst = inst->next;
+} while (inst->data.opcode != OpLabel);
+   
+inst->prev->next = NULL;
+inst->prev = NULL;
+// =======================
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Цикл разбора инструкций, содержащихся внутри базовых блоков, работает по следующей схеме:
+\begin{enumerate}
+	\item обработка начинается с заголовочной инструкции \texttt{OpLabel};
+	
+	\item указатель сдвигается на следующую инструкцию, так как заголовочные и терминальные интрукции, а также инструкции ветвления, хранятся неявно;
+	
+	\item расчитывается размер базового блока (количество инструкций) простым проходом по до первой инструкции ветвления или терминальной инструкции;
+	
+	\item в случае, если блок завершается инструкцией безусловного перехода \texttt{OpBranch}, добавляется ребро в граф потока управления;
+	
+	\item в случае, если блок завершается инструкцией условного ветвления\\
+	\texttt{OpBranchConditional}, добавляется две ребра в граф потока управления, а также сохраняется идентификатор (\texttt{result<id>}) условия в артибуты текущего базового блока;
+	
+	\item общий список инструкций разрывается.
+\end{enumerate}
+
+\begin{lstlisting}[caption={составление графа потока управления}]
+while (inst->data.opcode == OpLabel) {
+    block.count = 0;
+    struct instruction_list *start = inst->next;
+    inst = inst->next; // NOTE: skip OpLabel
+    
+    while (!terminal(inst->data.opcode)) {
+        inst = inst->next;
+        ++block.count;
+    }
+    
+    block.instructions = (block.count > 0 ? start : NULL);
+    
+    if (inst->data.opcode == OpBranch) {
+        u32 edge_id = inst->data.OpBranch.target_label;
+        u32 edge_index = search_item_u32(labels, bb_count, edge_id);
+        cfg_add_edge(&file.cfg, block_number, edge_index);
+    } else if (inst->data.opcode == OpBranchConditional) {
+        file.cfg.conditions[block_number] = inst->data.OpBranchConditional.condition;
+        u32 true_edge = search_item_u32(labels,
+                                        bb_count,
+                                        inst->data.OpBranchConditional.true_label);
+        u32 false_edge = search_item_u32(labels,
+                                         bb_count,
+                                         inst->data.OpBranchConditional.false_label);
+        cfg_add_edge(&file.cfg, block_number, true_edge);
+        cfg_add_edge(&file.cfg, block_number, false_edge);
+    }
+    
+    if (!supported_in_cfg(inst->data.opcode)) {
+        fprintf(stderr,
+                "[ERROR] Unsupported instruction (opcode %d) in CFG\n",
+                inst->data.opcode);
+        exit(1);
+    }
+    
+    struct instruction_list *save = inst;
+    inst->prev->next = NULL;
+    inst->next->prev = NULL;
+    inst = inst->next;
+    
+    file.blocks[block_number++] = block;
+}
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Наконец, инструкции, расположенные после последнего базового блока, сохраняюстя в соответствующее поле структуры промежуточного представления. Никакая дополнительная работа на этом этапе уже не требуется.
+\begin{lstlisting}[caption={отделение инструкций, расположенных после базовых блоков}]
+// NOTE: all post-cfg instructions
+file.post_cfg = inst;
+// =======================
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+\subsection{Построение SSA формы}
+Для построения SSA формы был применен алгоритм, использующий фронт доминаторов \cite{cyt91}, и состоящий из следующих шагов:
+\begin{enumerate}
+	\item поиск переменных и присваиваний;
+	
+	\item вставка фи-функций;
+	
+	\item переименование переменных и замена инструкций записи \texttt{OpStore} и чтения\\
+    \texttt{OpLoad} на инструкции копирования \texttt{OpCopyObject};
+	
+	\item удаление старых переменных и сопутствующих им декорирующих инструкций.
+\end{enumerate}
+
+Расчет дерева доминаторов производился с помощью алгоритма, предпложенного Ленгауэром и Тарьяном в 1979 году \cite{lan79}. Для реализации алгоритмов обхода в ширину и глубину были использованы стек и очередь вершин, соответственно.
+
+Для повышения читаемости полученного бинарного файла с помощью диззасембилрующих утилит были также добавлены декорирующие инструкции \texttt{OpName} для всех SSA имён.
+
+Для расчета итерированного фронта доминаторов были реализованы функции проверки наличия элемента в массиве \texttt{search\_item\_u32} и функция \texttt{vector\_push\_maybe}, использующие линейный поиск для гарантии уникальности элементов.
+\begin{lstlisting}[caption={функция линейного поиска}]
+static inline s32
+search_item_u32(u32 *array, u32 count, u32 item)
+{
+    for (u32 i = 0; i < count; ++i)
+        if (array[i] == item) return(i);
+    return(-1);
+}
+\end{lstlisting}
+\begin{lstlisting}[caption={функция добавления уникального элемента в вектор}]
+// NOTE: push only if not in vector already
+static bool
+vector_push_maybe(struct uint_vector *v, u32 item)
+{
+    if (search_item_u32(v->data, v->size, item) == -1) {
+        vector_push(v, item);
+        return(true);
+    }
+    return(false);
+}
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+\subsection{Граф потока управления}
+Граф потока управления программы был представлен в виде списка инцидентности, дополненного информацией о входящих ребрах (так как они нужны для поиска доминаторов).
+\begin{lstlisting}[caption={структура графа потока управления}]
+struct ir_cfg {
+    struct uint_vector labels; // NOTE: zero means 'deleted'
+    u32 *conditions;
+    s32 *dominators;
+    struct edge_list **out;
+    struct edge_list **in;
+};
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Каждый элемент массива \texttt{out} или \texttt{in} является однонаправленным списком ребер, содержащий как номер вершины, в которую уходит (или из которой приходит) данное ребро, так и указатель на следующий элемент списка (либо \texttt{NULL}, если этот элемент является последним).
+\begin{lstlisting}[caption={элемент списка ребер}]
+struct edge_list {
+    u32 data;
+    struct edge_list *next;
+};
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+\subsection{Интерфейс библиотеки}
+Функции, предназначеные для использования извне библиотеки, были вынесены в заголовчный файл \texttt{headers.h}, содержащий прототипы и описания этих функций. Стоит также заметить, что в отличие от всех остальных функций, написанных в ходе реализации библиотеки, функции в этом файле \emph{не} отмечены спецификатором \texttt{static}, что гарантирует доступность этих функций извне данной единицы компиляции. Таким образом, библиотека может быть использована как в виде исходных кодов (как часть проекта), так и в виде уже скомпилированного объектного файла.
+\begin{lstlisting}[caption={пример функций из заголовочного файла \texttt{headers.h}}]
+// NOTE: read a sequence of 4 byte words and produce an intermideate representation
+struct ir 
+ir_eat(u32 *data, u32 size);
+...
+// NOTE: adds an outgoing edge at basic block 'from' to basic block 'to'
+// as well as an incoming edge at basic block 'to' from basic block 'from'.
+// Returns true if the action was succesful, and false otherwise
+bool 
+cfg_add_edge(struct ir_cfg *cfg, u32 from, u32 to);
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Заголовочный файл \texttt{headers.h} также содержит инструкций по расширению поддерживаемого набора инструкций.
+\subsection{Сериализация промежуточного представления}
+Сериализация промежуточного представления, почти зеркально противоположна функции разбора промежуточного представления, однако несколько важных отличий все-таки существует. Так, при сериализации базовых блоков, считывается информация из графа потока управления (и, возможно, дополнительных атрибутов базового блока) для создания инструкции условного или безусловного перехода.
+\begin{lstlisting}[caption={конструирование инструкции ветвления}]
+struct instruction_t termination_inst;
+if (edge_count == 0) {
+        termination_inst.opcode = OpReturn;
+        termination_inst.wordcount = 1;
+    } else if (edge_count == 1) {
+        termination_inst.opcode = OpBranch;
+        termination_inst.wordcount = 2;
+        termination_inst.OpBranch.target_label = 
+                    file->cfg.labels.data[file->cfg.out[i]->data];
+    } else if (edge_count == 2) {
+        termination_inst.opcode = OpBranchConditional;
+        termination_inst.wordcount = 4;
+        termination_inst.OpBranchConditional.condition = file->cfg.conditions[i];
+        termination_inst.OpBranchConditional.true_label =
+                    file->cfg.labels.data[file->cfg.out[i]->data];
+        termination_inst.OpBranchConditional.false_label =
+                    file->cfg.labels.data[file->cfg.out[i]->next->data];
+    }
+    
+    words = instruction_dump(&termination_inst, buffer);
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Аналогично, создается инструкция аннотации базового блока \texttt{OpLabel}.
+\begin{lstlisting}[caption={конструирование инструкции \texttt{OpLabel}}]
+struct basic_block block = file->blocks[i];
+struct oplabel_t label_operand = {
+    .result_id = file->cfg.labels.data[i]
+};
+        
+struct instruction_t label_inst = {
+    .opcode = OpLabel,
+    .wordcount = 2,
+    .OpLabel = label_operand
+};
+        
+words = instruction_dump(&label_inst, buffer);
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Также стоит заметить, что неподдерживаемые инструкции сериализуются с использованием поля \texttt{instruction.unparsed\_words}.
+\begin{lstlisting}[caption={сериализация неподдерживаемых инструкций}]
+switch (inst->opcode) {
+    ...
+    default: {
+        memcpy(buffer, inst->unparsed_words, inst->wordcount * 4);
+    }
+}
+\end{lstlisting}
+
+\newpage
+\section{Тестирование}
+\subsection{Инструментарий}
+Для тестирования полученной реализации использовались утилиты \texttt{spirv-dis} и \texttt{spirv-val}, предоставляемые \texttt{Khronos Group} \cite{tools19}.
+
+Консольная утилита \texttt{spirv-dis} предоставляет возможность просмотра бинарного файла \texttt{SPIR-V} в виде последовательности инструкций.
+
+Консольная утилита  \texttt{spirv-val} позволяет валидировать данный бинарный файл \texttt{SPIR-V} на предмет выполнения правил, установленных спецификацией. Согласно постановке задачи, валидация на уровне библиотеки не производится, поэтому валидирующая утилита имела особую важность в проверке корректности пораждаемых библиотекой бинарных данных.
+
+Для пораждения \texttt{SPIR-V} файлов использовался эталонный компилятор\\
+\texttt{glslangValidator}.
+\subsection{Проверка корректности SSA формы}
+Проверка полученной SSA формы производилось путем ручного изучения полученного бинарного файла утилитой \texttt{spirv-dis}, а также автоматически валидировалась утилитой \texttt{spirv-val}. В качестве примера можно рассмотреть следущий шейдер, написанный на языке \texttt{GLSL}:
+\begin{lstlisting}[caption={код шейдера на языке \texttt{GLSL}}]
+#version 450
+
+void main()
+{
+    int a = 1;
+    int b;
+    int c = 1;
+    int d;
+    
+    while (true) {
+        if (true) {
+            c = 2;
+        }
+        
+        b = a + 1;
+        d = c + 1;
+    }
+}
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Соотвествующий бинарный файл представляется следующей последовательностью инструкций, полученных при помощи утилиты \texttt{spirv-dis}:
+\begin{lstlisting}[caption={бинарный \texttt{SPIR-V} файл до преобразований}]
+               OpCapability Shader
+          %1 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %main "main"
+               OpExecutionMode %main OriginUpperLeft
+               OpSource GLSL 450
+               OpName %main "main"
+               OpName %a "a"
+               OpName %c "c"
+               OpName %b "b"
+               OpName %d "d"
+       %void = OpTypeVoid
+          %3 = OpTypeFunction %void
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %int_1 = OpConstant %int 1
+       %bool = OpTypeBool
+       %true = OpConstantTrue %bool
+      %int_2 = OpConstant %int 2
+       %main = OpFunction %void None %3
+          %5 = OpLabel
+          %a = OpVariable %_ptr_Function_int Function
+          %c = OpVariable %_ptr_Function_int Function
+          %b = OpVariable %_ptr_Function_int Function
+          %d = OpVariable %_ptr_Function_int Function
+               OpStore %a %int_1
+               OpStore %c %int_1
+               OpBranch %11
+         %11 = OpLabel
+               OpLoopMerge %13 %14 None
+               OpBranch %15
+         %15 = OpLabel
+               OpBranchConditional %true %12 %13
+         %12 = OpLabel
+               OpSelectionMerge %19 None
+               OpBranchConditional %true %18 %19
+         %18 = OpLabel
+               OpStore %c %int_2
+               OpBranch %19
+         %19 = OpLabel
+         %22 = OpLoad %int %a
+         %23 = OpIAdd %int %22 %int_1
+               OpStore %b %23
+         %25 = OpLoad %int %c
+         %26 = OpIAdd %int %25 %int_1
+               OpStore %d %26
+               OpBranch %14
+         %14 = OpLabel
+               OpBranch %11
+         %13 = OpLabel
+               OpReturn
+               OpFunctionEnd
+
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+После вызова функций \texttt{ir\_eat}, \texttt{ssa\_convert} и \texttt{ir\_dump}, был получен следующий бинарный файл:
+\begin{lstlisting}[caption={бинарный \texttt{SPIR-V} файл в SSA форме}]
+               OpCapability Shader
+          %1 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %main "main"
+               OpExecutionMode %main OriginUpperLeft
+               OpSource GLSL 450
+               OpName %main "main"
+               OpName %ssa0 "ssa0"
+               OpName %ssa1 "ssa1"
+               OpName %ssa1_0 "ssa1"
+               OpName %ssa1_1 "ssa1"
+               OpName %ssa1_2 "ssa1"
+               OpName %ssa2 "ssa2"
+               OpName %ssa3 "ssa3"
+       %void = OpTypeVoid
+          %3 = OpTypeFunction %void
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %int_1 = OpConstant %int 1
+       %bool = OpTypeBool
+       %true = OpConstantTrue %bool
+      %int_2 = OpConstant %int 2
+       %main = OpFunction %void None %3
+          %5 = OpLabel
+       %ssa0 = OpCopyObject %int %int_1
+       %ssa1 = OpCopyObject %int %int_1
+               OpBranch %11
+         %11 = OpLabel
+         %27 = OpPhi %int %ssa1 %5 %ssa1_2 %14
+     %ssa1_0 = OpCopyObject %int %27
+               OpLoopMerge %13 %14 None
+               OpBranch %15
+         %15 = OpLabel
+               OpBranchConditional %true %12 %13
+         %12 = OpLabel
+               OpSelectionMerge %19 None
+               OpBranchConditional %true %18 %19
+         %18 = OpLabel
+     %ssa1_1 = OpCopyObject %int %int_2
+               OpBranch %19
+         %19 = OpLabel
+         %28 = OpPhi %int %ssa1_0 %12 %ssa1_1 %18
+     %ssa1_2 = OpCopyObject %int %28
+         %22 = OpCopyObject %int %ssa0
+         %23 = OpIAdd %int %22 %int_1
+       %ssa2 = OpCopyObject %int %23
+         %25 = OpCopyObject %int %ssa1_2
+         %26 = OpIAdd %int %25 %int_1
+       %ssa3 = OpCopyObject %int %26
+               OpBranch %14
+         %14 = OpLabel
+               OpBranch %11
+         %13 = OpLabel
+               OpReturn
+               OpFunctionEnd
+
+\end{lstlisting}
+~\\ % ctrl+f @lstime
+
+Можно заметить, что были вставлены две фи-функции, а инструкции \texttt{OpVariable}, \texttt{OpStore} и \texttt{OpLoad} были удалены. Проверка утилитой \texttt{spirv-val} не показала каких-либо ошибок.
+
+\newpage
+\section*{Заключение}
+\addcontentsline{toc}{section}{Заключение}
+В ходе выполнения курсовой работы был изучен бинарный формат \texttt{SPIR-V}, разработано промежуточное представление этого формата и интерфейс взаимодействия с этим промежуточным представлением.
+
+На основании поставленных требований была разработана кроссплатформенная библиотека для написания оптимизаций бинарного формата \texttt{SPIR-V}, предоставляющая функции для получения информации о промежуточном представлении и графе потока управления. Для дальнейшего упрощения пользования библиотекой была разработана функция преобразования \texttt{SPIR-V} моделя в SSA форму, не использующую операторов \texttt{OpStore} и \texttt{OpLoad}, а также функции расчета дерева доминаторов, обходов в ширину и глубину.
+
+Разработанный функционал был реализован с использованием языка \texttt{C99} с использованием минимального набора системных заголовочных файлов, что позволило добиться компилятции библиотеки как на \texttt{GNU/Linux}, так и на \texttt{Windows} без каких-изменений.
+
+Полученная реализация была протестирована и валидирована с использованием утилит \texttt{spirv-dis} и \texttt{spirv-val}. Процесс тестирования показал, что выбранные алгоритмы работают корректно и эффективно, а использование библиотеки для конечного пользователя максимально упрощено.
+
+Дальнейшнее развитие проекта может быть направлено на расширение множества поддерживаемых инструкций, а также на написание оптимизирующих преобразований, использующих данную библиотеку.
+
+\newpage
+\addcontentsline{toc}{section}{Список литературы}
+\begin{thebibliography}{9}
+
+\bibitem{vlk19}
+\textit{Vulkan. Graphics and Compute Belong Together} // khronos.org URL: \url{https://www.khronos.org/assets/uploads/developers/library/overview/2015_vulkan_v1_Overview.pdf} (дата обращения: 12.05.2019).
+
+\bibitem{ssa98}
+Rosen B., Wegman M., Zadeck K. 
+\textit{Global value numbers and redundant computations} // Proceedings of the 15th ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages. Нью-Йорк: 1988. 
+
+\bibitem{spv19}
+\textit{SPIR-V, Extended Instruction Set, and Extension Specifications} // khronos.org URL: \url{https://www.khronos.org/registry/spir-v} (дата обращения: 12.05.2019).
+
+\bibitem{cfg70}
+Allen F. 
+\textit{Control flow analysis} // Proceedings of a symposium on Compiler optimization. Иллинойс: Urbana-Champaign, 1970.
+
+\bibitem{mun97}
+Muchnick S. 
+\textit{Advanced Compiler Design and Implementation.} Сан Франциско: Morgan Kaufmann Publishers, 1997.
+
+\bibitem{cyt91}
+Cytron R., Ferrante J,. Rosen B. 
+\textit{Efficiently computing static single assignment form and the control dependence graph} // ACM Transactions on Programming Languages and Systems. 1991. С. 451-490.
+
+\bibitem{lan79}
+Lengauer T., Tarjan R.
+\textit{A Fast Algorithm For Finding Dominators in a Flowchart} // ACM Transactions on Programming Languages and Systems. 1979. С. 121-141.
+
+\bibitem{tools19}
+\textit{SPIRV-Tools} // GitHub URL: \url{https://github.com/KhronosGroup/SPIRV-Tools} (дата обращения: 12.05.2019).
+
+\end{thebibliography}
+
+
+\end{document}
